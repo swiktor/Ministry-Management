@@ -2,6 +2,6 @@
 
 @section('content')
 
-Ministry list
+Ministry dashboard
 
 @endsection

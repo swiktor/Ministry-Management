@@ -2,6 +2,6 @@
 
 @section('content')
 
-Ministry list
+Report add
 
 @endsection

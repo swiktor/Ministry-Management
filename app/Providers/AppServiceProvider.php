@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
-        View::share('applicationName', 'SM4JW');
+        // View::share('applicationName', 'Ministry Management for Jehovah’s Witnesses');
+        View::share('applicationName', 'Ministry Management');
     }
 }
