@@ -36,7 +36,7 @@ class CoworkerRepository implements CoworkerRepositoryInterface
             ->get();
     }
 
-    public function allActivePaginated(int $limit = 15)
+    public function allActivePaginated(int $limit = 10)
     {
         return $this->coworkerModel
             ->orderBy('surname')

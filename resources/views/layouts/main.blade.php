@@ -8,6 +8,10 @@
         <meta name="description" content=""/>
 
         <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
     </head>
     <body class="sb-nav-fixed">
 
@@ -52,7 +56,7 @@
         </nav>
 
 
-        {{-- @auth --}}
+        @auth
             <div id="layoutSidenav">
                 <div id="layoutSidenav_nav">
                     <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
@@ -86,18 +90,17 @@
                     </footer>
                 </div>
             </div>
-        {{-- @else
+        @else
             <div id="layoutAuthentication">
                 <div id="layoutAuthentication_content">
                     <main>
                         <div class="container-fluid">
-                            @include('shared.messages')
                             @yield('content')
                         </div>
                     </main>
                 </div>
             </div>
-        @endauth --}}
+        @endauth
         <script src="{{ mix('/js/app.js') }}"></script>
     </body>
 </html>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\CoworkerServiceProvider;
+use App\Providers\MinistryServiceProvider;
 
 return [
 
@@ -178,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         CoworkerServiceProvider::class,
+        MinistryServiceProvider::class,
 
     ],
 

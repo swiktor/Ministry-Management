@@ -25,10 +25,10 @@ Route::middleware(['auth'])->group(
             'as' => 'ministry.'
         ], function () {
             Route::get('list', 'MinistryController@list')
-            ->name('list');
+                ->name('list');
 
             Route::get('add', 'MinistryController@add')
-            ->name('add');
+                ->name('add');
         });
 
         Route::group([
@@ -49,12 +49,12 @@ Route::middleware(['auth'])->group(
             'prefix' => 'report',
             'as' => 'report.'
         ], function () {
+            Route::get('dashboard', 'ReportController@dashboard')
+                ->name('dashboard');
+
             Route::get('list', 'ReportController@list')
-            ->name('list');
+                ->name('list');
         });
-
-
-
     }
 );
 
