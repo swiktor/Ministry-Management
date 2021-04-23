@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/ministry','MinistryController@list');
-
-
-
-
 Route::middleware(['auth'])->group(
     function () {
 
@@ -64,13 +59,3 @@ Route::middleware(['auth'])->group(
 );
 
 Auth::routes();
-
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-// Auth::routes();
-
-// Route::get('/home', 'HomeController@index')
-//     ->name('home');
