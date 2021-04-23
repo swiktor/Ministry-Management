@@ -5,19 +5,16 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Coworker extends Model
+class Type extends Model
 {
     protected $fillable = [
-        'name', 'surname', 'active'
+        'name', 'duration'
     ];
-
 
     public function ministries()
     {
-        return $this->belongsToMany(Coworker::class, 'coworkerMinistries');
+        return $this->hasMany(Ministry::class, 'type_id', 'id');
     }
-
-
 
 
 

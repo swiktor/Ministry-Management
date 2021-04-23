@@ -7,7 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class CoworkersSeeder extends Seeder
+class CoworkerMinistriesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,25 +16,21 @@ class CoworkersSeeder extends Seeder
      */
     public function run()
     {
-        $count = DB::table('coworkers')->count();
+        $count = DB::table('coworkerministries')->count();
         if ($count == 0) {
-
             $faker = Factory::create();
-            DB::table('coworkers')->truncate();
 
-
-            for ($j = 0; $j < 1; $j++) {
-                $coworkers = [];
+            for ($j = 0; $j < 10; $j++) {
+                $coworkerministries = [];
                 for ($i = 0; $i < 100; $i++) {
-                    $coworkers[] = [
-                        'surname' => $faker->lastName(),
-                        'name' => $faker->firstName(),
-                        'active' => $faker->numberBetween(0, 1),
+                    $coworkerministries[] = [
+                        'coworker_id' => $faker->numberBetween(1, 100),
+                        'ministry_id' => $faker->numberBetween(1, 100),
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now()
                     ];
                 }
-                DB::table('coworkers')->insert($coworkers);
+                DB::table('coworkerministries')->insert($coworkerministries);
             }
         }
     }

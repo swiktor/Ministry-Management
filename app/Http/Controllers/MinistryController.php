@@ -32,6 +32,4 @@ class MinistryController extends Controller
     {
         return view('ministry.add');
     }
-
-
 }

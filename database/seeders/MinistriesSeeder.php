@@ -19,7 +19,6 @@ class MinistriesSeeder extends Seeder
         $count = DB::table('ministries')->count();
         if ($count == 0) {
             $faker = Factory::create();
-            DB::table('ministries')->truncate();
 
             for ($j = 0; $j < 1; $j++) {
                 $ministries = [];

@@ -2,6 +2,7 @@
 
 use App\Providers\CoworkerServiceProvider;
 use App\Providers\MinistryServiceProvider;
+use App\Providers\ReportServiceProvider;
 
 return [
 
@@ -180,6 +181,7 @@ return [
 
         CoworkerServiceProvider::class,
         MinistryServiceProvider::class,
+        ReportServiceProvider::class,
 
     ],
 

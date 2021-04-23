@@ -32,15 +32,17 @@ class MinistryRepository implements MinistryRepositoryInterface
     {
         return $this->ministryModel
             ->where('user_id',Auth::id())
-            ->orderBy('when')
+            ->orderBy('when','desc')
             ->get();
     }
 
     public function allActivePaginated(int $limit = 1)
     {
         return $this->ministryModel
+            ->with('types')
+            ->with('coworkers')
             ->where('user_id', Auth::id())
-            ->orderBy('when')
+            ->orderBy('when','desc')
             ->paginate($limit);
     }
 
