@@ -39,7 +39,7 @@ class User extends Authenticatable
 
     public function ministries()
     {
-        return $this->hasMany(Ministry::class);
+        return $this->hasMany(Ministry::class, 'user_id', 'id');
     }
 
 }

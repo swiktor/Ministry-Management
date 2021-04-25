@@ -30,7 +30,7 @@ class Ministry extends Model
 
     public function reports()
     {
-        return $this->belongsTo(Report::class, 'type_id', 'id');
+        return $this->belongsTo(Report::class, 'id', 'ministry_id');
     }
 
     use HasFactory;

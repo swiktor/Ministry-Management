@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Repository\Eloquent;
 
 use App\Model\Report;
+use App\Model\Ministry;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\ReportRepository as ReportRepositoryInterface;
-
-
 class ReportRepository implements ReportRepositoryInterface
 {
     private Report $reportModel;
+    private Ministry $ministryModel;
 
-    public function __construct(Report $reportModel)
+    public function __construct(Report $reportModel, Ministry $ministryModel)
     {
         $this->reportModel = $reportModel;
+        $this->ministryModel = $ministryModel;
     }
 
     public function updateModel(Report $report, array $data): void
@@ -32,28 +32,36 @@ class ReportRepository implements ReportRepositoryInterface
         $report->save();
     }
 
-    public function allActive(): Collection
+    public function all(): Collection
     {
-        return $this->reportModel
-            ->with('ministries')
+        return $this->ministryModel
             ->with('types')
-            ->with('coworkers')
+            ->with(['coworkers' => function ($query) {
+                $query
+                    ->distinct()
+                    ->orderBy('surname')
+                    ->orderBy('name');
+            }])
+            ->with('reports')
             ->where('user_id', Auth::id())
             ->orderBy('when', 'desc')
             ->get();
     }
 
-    public function allActivePaginated(int $limit = 10)
+    public function allPaginated(int $limit = 10)
     {
-        return $this->reportModel
-            ->with('ministries')
+          return $this->ministryModel
             ->with('types')
-            ->with('coworkers')
-            ->with('users')
+            ->with(['coworkers' => function ($query) {
+                $query
+                    ->distinct()
+                    ->orderBy('surname')
+                    ->orderBy('name');
+            }])
+            ->with('reports')
             ->where('user_id', Auth::id())
             ->orderBy('when', 'desc')
             ->paginate($limit);
-
     }
 
     public function get(int $id): Report

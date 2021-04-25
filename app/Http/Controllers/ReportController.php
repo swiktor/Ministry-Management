@@ -17,16 +17,16 @@ class ReportController extends Controller
 
     public function dashboard()
     {
-        return view('ministry.dashboard');
+        return view('report.dashboard');
     }
 
     public function list()
     {
+        $reports = $this->reportRepository->allPaginated(10);
 
-        $reports = $this->reportRepository->allActivePaginated(10);
-        dd($reports->toSql());
-
-        return view('report.list');
+        return view('report.list', [
+            'ministries' => $reports,
+        ]);
     }
 
     public function add()

@@ -11,9 +11,9 @@ interface ReportRepository
 {
     public function updateModel(Report $report, array $data): void;
 
-    public function allActive(): Collection;
+    public function all(): Collection;
 
     public function get(int $id);
 
-    public function allActivePaginated(int $limit);
+    public function allPaginated(int $limit);
 }
