@@ -38,8 +38,7 @@
                                     <td class="align-middle">{{ $ministry->types->name }}</td>
                                     <td class="align-middle">{{ $ministry->when->format('d.m.Y H:i') }}</td>
                                     <td class="align-middle">
-                                        {{-- <a href="{{ route('games.show', ['ministry' => $ministry->id]) }}">Szczegóły</a> --}}
-                                        <a href="#">Szczegóły</a>
+                                        <a href="{{route('report.edit.form',['id'=>$ministry->reports->id])}}">Szczegóły</a>
                                     </td>
                                 </tr>
                             @endforeach

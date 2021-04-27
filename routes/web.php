@@ -65,6 +65,13 @@ Route::middleware(['auth'])->group(
 
             Route::get('list', 'ReportController@list')
                 ->name('list');
+
+            Route::get('edit/form/{id}', 'ReportController@editForm')
+            ->name('edit.form');
+
+            Route::post('edit', 'ReportController@edit')
+                ->name('edit');
+
         });
     }
 );

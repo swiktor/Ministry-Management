@@ -20,4 +20,8 @@ interface CoworkerRepository
     public function neverActive();
 
     public function neverActivePaginated(int $limit);
+
+    public function add($data);
+
+    public function addToMinistry($coworkers, $ministry_id);
 }

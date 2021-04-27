@@ -9,6 +9,7 @@ use App\Model\Ministry;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\ReportRepository as ReportRepositoryInterface;
+
 class ReportRepository implements ReportRepositoryInterface
 {
     private Report $reportModel;
@@ -50,7 +51,7 @@ class ReportRepository implements ReportRepositoryInterface
 
     public function allPaginated(int $limit = 10)
     {
-          return $this->ministryModel
+        return $this->ministryModel
             ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
@@ -67,5 +68,25 @@ class ReportRepository implements ReportRepositoryInterface
     public function get(int $id): Report
     {
         return $this->reportModel->find($id);
+    }
+
+    public function edit($data)
+    {
+        $report = $this-> reportModel->find($data['id']);
+
+        $report->hours = $data['hours'];
+        $report->placements = $data['placements'];
+        $report->videos = $data['videos'];
+        $report->returns = $data['returns'];
+        $report->studies = $data['studies'];
+
+        $report->save();
+    }
+
+    public function add($ministry_id)
+    {
+        $report = new Report();
+        $report->ministry_id = $ministry_id;
+        $report->save();
     }
 }

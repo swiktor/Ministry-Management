@@ -39,11 +39,7 @@ class CoworkerController extends Controller
     {
         $data = $request->validated();
 
-        $coworker = new Coworker();
-        $coworker->name =$data['name'];
-        $coworker->surname =$data['surname'];
-
-        $coworker->save();
+        $this->coworkerRepository->add($data);
 
         return redirect()
             ->route('coworker.list')
@@ -52,6 +48,6 @@ class CoworkerController extends Controller
 
     public function addForm()
     {
-      return view('coworker.add');
+        return view('coworker.add');
     }
 }

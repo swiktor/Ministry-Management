@@ -54,8 +54,7 @@
                                     <td class="align-middle">{{data_get($ministry,'reports.studies')}}</td>
 
                                     <td class="align-middle">
-                                        <a href="{{$ministry->user_id }}">Szczegóły</a>
-                                        {{-- <a href="#">Szczegóły</a> --}}
+                                         <a href="{{route('report.edit.form',['id'=>data_get($ministry,'reports.id')])}}">Szczegóły</a>
                                     </td>
                                 </tr>
                             @endforeach

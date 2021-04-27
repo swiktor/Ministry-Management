@@ -5,23 +5,27 @@ namespace App\Http\Controllers;
 use App\Model\Report;
 use App\Model\Ministry;
 use Illuminate\Http\Request;
+use App\Http\Requests\AddMinistry;
 use App\Repository\TypeRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\CoworkerRepository;
 use App\Repository\MinistryRepository;
+use App\Repository\ReportRepository;
 
 class MinistryController extends Controller
 {
     private MinistryRepository $ministryRepository;
     private CoworkerRepository $coworkerRepository;
     private TypeRepository $typeRepository;
+    private ReportRepository $reportRepository;
 
-    public function __construct(MinistryRepository $ministryRepository, CoworkerRepository $coworkerRepository, TypeRepository $typeRepository)
+    public function __construct(MinistryRepository $ministryRepository, CoworkerRepository $coworkerRepository, TypeRepository $typeRepository, ReportRepository $reportRepository)
     {
         $this->ministryRepository = $ministryRepository;
         $this->coworkerRepository = $coworkerRepository;
         $this->typeRepository = $typeRepository;
+        $this->reportRepository = $reportRepository;
     }
 
     public function dashboard()
@@ -49,29 +53,15 @@ class MinistryController extends Controller
         ]);
     }
 
-    public function add(Request $request)
+    public function add(AddMinistry $request)
     {
-        $data = $request->toArray();
+        $data = $request->validated();
 
-        $ministry = new Ministry();
-        $ministry->type_id= $data['type'];
-        $ministry->when=$data['when'];
-        $ministry->user_id=Auth::id();
-        $ministry->save();
+        $ministry_id = $this->ministryRepository->add($data);
 
-        $ministry_id=$ministry->id;
-        $coworkers = $data['coworker'];
+        $this->coworkerRepository->addToMinistry($data['coworker'], $ministry_id);
 
-        foreach ($coworkers ?? [] as $coworker) {
-            DB::table('coworkerministries')->insert([
-                'coworker_id' => $coworker,
-                'ministry_id' => $ministry_id
-            ]);
-        }
-
-        $report = new Report();
-        $report->ministry_id = $ministry_id;
-        $report->save();
+        $this->reportRepository->add($ministry_id);
 
         return redirect()
             ->route('ministry.list')

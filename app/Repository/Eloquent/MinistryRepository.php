@@ -103,4 +103,15 @@ class MinistryRepository implements MinistryRepositoryInterface
             ->orderBy('when', 'desc')
             ->paginate($limit);
     }
+
+    public function add($data)
+    {
+        $ministry = new Ministry();
+        $ministry->type_id = $data['type'];
+        $ministry->when = $data['when'];
+        $ministry->user_id = Auth::id();
+        $ministry->save();
+
+        return $ministry->id;
+    }
 }

@@ -82,4 +82,23 @@ class CoworkerRepository implements CoworkerRepositoryInterface
             ->whereNotIn('id', $ids)
             ->paginate($limit);
     }
+
+    public function add($data)
+    {
+        $coworker = new Coworker();
+        $coworker->name = $data['name'];
+        $coworker->surname = $data['surname'];
+
+        $coworker->save();
+    }
+
+    public function addToMinistry($coworkers, $ministry_id)
+    {
+        foreach ($coworkers ?? [] as $coworker) {
+            DB::table('coworkerministries')->insert([
+                'coworker_id' => $coworker,
+                'ministry_id' => $ministry_id
+            ]);
+        }
+    }
 }

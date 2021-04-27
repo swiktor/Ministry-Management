@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditReport;
 use App\Repository\ReportRepository;
-use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
@@ -29,8 +29,20 @@ class ReportController extends Controller
         ]);
     }
 
-    public function add()
+    public function edit(EditReport $request)
     {
-        return view('report.add');
+        $data = $request->validated();
+        $this->reportRepository->edit($data);
+
+        return redirect()
+            ->route('report.list')
+            ->with('success', 'Pomyślenie zmieniono sprawozdanie');
     }
+
+    public function editForm(int $id)
+    {
+        $report = $this->reportRepository->get($id);
+        return view('report.edit',['report'=> $report]);
+    }
+
 }

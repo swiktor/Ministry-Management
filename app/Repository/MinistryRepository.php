@@ -20,4 +20,6 @@ interface MinistryRepository
     public function listForCoworker(int $id);
 
     public function listForCoworkerPaginated(int $id, int $limit);
+
+    public function add($data);
 }

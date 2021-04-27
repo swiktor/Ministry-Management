@@ -16,4 +16,8 @@ interface ReportRepository
     public function get(int $id);
 
     public function allPaginated(int $limit);
+
+    public function edit($data);
+
+    public function add($ministry_id);
 }
