@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Report;
+use App\Model\Ministry;
 use Illuminate\Http\Request;
+use App\Repository\TypeRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Repository\CoworkerRepository;
 use App\Repository\MinistryRepository;
-use App\Repository\TypeRepository;
 
 class MinistryController extends Controller
 {
@@ -48,7 +52,30 @@ class MinistryController extends Controller
     public function add(Request $request)
     {
         $data = $request->toArray();
-        dd($data);
+
+        $ministry = new Ministry();
+        $ministry->type_id= $data['type'];
+        $ministry->when=$data['when'];
+        $ministry->user_id=Auth::id();
+        $ministry->save();
+
+        $ministry_id=$ministry->id;
+        $coworkers = $data['coworker'];
+
+        foreach ($coworkers ?? [] as $coworker) {
+            DB::table('coworkerministries')->insert([
+                'coworker_id' => $coworker,
+                'ministry_id' => $ministry_id
+            ]);
+        }
+
+        $report = new Report();
+        $report->ministry_id = $ministry_id;
+        $report->save();
+
+        return redirect()
+            ->route('ministry.list')
+            ->with('success', 'Pomyślnie dodano nową służbę');
     }
 
     public function listForCoworker(int $id)
