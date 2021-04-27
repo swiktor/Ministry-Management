@@ -17,7 +17,7 @@ class CreateCoworkersTable extends Migration
             $table->id();
             $table->string('surname');
             $table->string('name');
-            $table->boolean('active');
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }

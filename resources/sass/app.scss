@@ -24,7 +24,7 @@
 @import "navigation/sidenav/sidenav";
 @import "navigation/sidenav/sidenav-dark";
 @import "navigation/sidenav/sidenav-light";
-
+@import "../../node_modules/bootstrap-select/sass/bootstrap-select.scss";
 #layoutAuthentication {
     margin-top: 70px;
 }
@@ -32,4 +32,9 @@
 .user-avatar
 {
     max-width: 250px;
+}
+
+.container
+{
+    margin-top: 70px;
 }

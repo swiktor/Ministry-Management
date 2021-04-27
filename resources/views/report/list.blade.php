@@ -39,7 +39,7 @@
                         <tbody>
                             @foreach ($ministries ?? [] as $ministry)
                                 <tr>
-                                    <td class="align-middle">{{ $ministry->id }}</td>
+                                    <td class="align-middle">{{ $loop->iteration }}</td>
                                     <td class="align-middle">
                                         @foreach ($ministry->coworkers as $coworker)
                                         {{$coworker->name . ' ' .$coworker->surname }}{!! "<br>" !!}

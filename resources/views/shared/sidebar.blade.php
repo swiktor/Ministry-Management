@@ -18,7 +18,7 @@
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Lista
     </a>
-    <a class="nav-link" href="{{route('ministry.add')}}">
+    <a class="nav-link" href="{{route('ministry.add.form')}}">
         <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
         Umów
     </a>
@@ -34,7 +34,7 @@
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Ci co nigdy
     </a>
-    <a class="nav-link" href="{{route('coworker.add')}}">
+    <a class="nav-link" href="{{route('coworker.add.form')}}">
         <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
         Dodaj
     </a>

@@ -27,7 +27,10 @@ Route::middleware(['auth'])->group(
             Route::get('list', 'MinistryController@list')
                 ->name('list');
 
-            Route::get('add', 'MinistryController@add')
+            Route::get('add/form', 'MinistryController@addForm')
+                ->name('add.form');
+
+            Route::post('add', 'MinistryController@add')
                 ->name('add');
         });
 
@@ -41,8 +44,16 @@ Route::middleware(['auth'])->group(
             Route::get('never', 'CoworkerController@never')
                 ->name('never');
 
-            Route::get('add', 'CoworkerController@add')
+            Route::get('add/form', 'CoworkerController@addForm')
+                ->name('add.form');
+
+            Route::post('add', 'CoworkerController@add')
                 ->name('add');
+
+            Route::get('list/{id}', 'MinistryController@listForCoworker')
+            ->where(['id' => '[0-9]+'])
+            ->name('ministry.list');
+
         });
 
         Route::group([

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\CoworkerRepository;
 use Illuminate\Http\Request;
+use App\Http\Requests\AddCoworker;
+use App\Model\Coworker;
+use App\Repository\CoworkerRepository;
 
 class CoworkerController extends Controller
 {
@@ -26,11 +28,30 @@ class CoworkerController extends Controller
 
     public function never()
     {
-        return view('coworker.never');
+        $coworkers = $this->coworkerRepository->neverActivePaginated(10);
+
+        return view('coworker.list', [
+            'coworkers' => $coworkers,
+        ]);
     }
 
-    public function add()
+    public function add(AddCoworker $request)
     {
-        return view('coworker.add');
+        $data = $request->validated();
+
+        $coworker = new Coworker();
+        $coworker->name =$data['name'];
+        $coworker->surname =$data['surname'];
+
+        $coworker->save();
+
+        return redirect()
+            ->route('coworker.list')
+            ->with('success', 'Dodano nowego współpracownika');
+    }
+
+    public function addForm()
+    {
+      return view('coworker.add');
     }
 }

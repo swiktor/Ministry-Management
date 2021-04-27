@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Repository\Eloquent;
 
 use App\Model\Coworker;
-use App\Repository\CoworkerRepository as CoworkerRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use App\Repository\CoworkerRepository as CoworkerRepositoryInterface;
 
 
 class CoworkerRepository implements CoworkerRepositoryInterface
@@ -48,5 +49,37 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function get(int $id): Coworker
     {
         return $this->coworkerModel->find($id);
+    }
+
+    public function neverActive()
+    {
+        $ids = DB::table('coworkerministries')
+            ->select('coworker_id')
+            ->distinct()
+            ->pluck('coworker_id')
+            ->toArray();
+
+        return $this->coworkerModel
+            ->orderBy('surname')
+            ->orderBy('name')
+            ->where('active', 1)
+            ->whereNotIn('id', $ids)
+            ->get();
+    }
+
+    public function neverActivePaginated(int $limit = 10)
+    {
+        $ids = DB::table('coworkerministries')
+            ->select('coworker_id')
+            ->distinct()
+            ->pluck('coworker_id')
+            ->toArray();
+
+        return $this->coworkerModel
+            ->orderBy('surname')
+            ->orderBy('name')
+            ->where('active', 1)
+            ->whereNotIn('id', $ids)
+            ->paginate($limit);
     }
 }

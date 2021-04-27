@@ -11,9 +11,13 @@ interface MinistryRepository
 {
     public function updateModel(Ministry $ministry, array $data): void;
 
-    public function allActive(): Collection;
+    public function all(): Collection;
 
     public function get(int $id);
 
-    public function allActivePaginated(int $limit);
+    public function allPaginated(int $limit);
+
+    public function listForCoworker(int $id);
+
+    public function listForCoworkerPaginated(int $id, int $limit);
 }

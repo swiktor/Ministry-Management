@@ -11,6 +11,8 @@ class Type extends Model
         'name', 'duration'
     ];
 
+    protected $dates = ['duration'];
+
     public function ministries()
     {
         return $this->hasMany(Ministry::class, 'type_id', 'id');

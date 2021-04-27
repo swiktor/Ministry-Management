@@ -10,20 +10,20 @@
                     <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Lp</th>
-                                <th>Z kim</th>
-                                <th>Typ</th>
-                                <th>Kiedy</th>
-                                <th>Szczegóły</th>
+                                <th class="align-middle">Lp</th>
+                                <th class="align-middle">Z kim</th>
+                                <th class="align-middle">Typ</th>
+                                <th class="align-middle">Kiedy</th>
+                                <th class="align-middle">Szczegóły</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Lp</th>
-                                <th>Z kim</th>
-                                <th>Typ</th>
-                                <th>Kiedy</th>
-                                <th>Szczegóły</th>
+                                <th class="align-middle">Lp</th>
+                                <th class="align-middle">Z kim</th>
+                                <th class="align-middle">Typ</th>
+                                <th class="align-middle">Kiedy</th>
+                                <th class="align-middle">Szczegóły</th>
                             </tr>
                         </tfoot>
                         <tbody>
