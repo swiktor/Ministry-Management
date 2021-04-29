@@ -14,12 +14,6 @@ class ReportController extends Controller
         $this->reportRepository = $repository;
     }
 
-
-    public function dashboard()
-    {
-        return view('report.dashboard');
-    }
-
     public function list()
     {
         $reports = $this->reportRepository->allPaginated(10);

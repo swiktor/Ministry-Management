@@ -1,6 +1,7 @@
 <?php
 
 use App\Providers\CoworkerServiceProvider;
+use App\Providers\DashboardServiceProvider;
 use App\Providers\MinistryServiceProvider;
 use App\Providers\ReportServiceProvider;
 use App\Providers\TypeServiceProvider;
@@ -85,7 +86,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'pl',
 
     /*
     |--------------------------------------------------------------------------
@@ -111,7 +112,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'pl_PL',
 
     /*
     |--------------------------------------------------------------------------
@@ -184,6 +185,7 @@ return [
         MinistryServiceProvider::class,
         ReportServiceProvider::class,
         TypeServiceProvider::class,
+        DashboardServiceProvider::class,
 
     ],
 

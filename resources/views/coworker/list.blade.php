@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@section('title', 'Współpracownicy')
+
 @section('content')
 
     <div class="card mt-3">
@@ -10,27 +12,27 @@
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th class="align-middle">Lp</th>
-                                <th class="align-middle">Nazwisko</th>
-                                <th class="align-middle">Imię</th>
-                                <th class="align-middle">Szczegóły</th>
+                                <th class="text-center">Lp</th>
+                                <th class="text-center">Nazwisko</th>
+                                <th class="text-center">Imię</th>
+                                <th class="text-center">Szczegóły</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th class="align-middle">Lp</th>
-                                <th class="align-middle">Nazwisko</th>
-                                <th class="align-middle">Imię</th>
-                                <th class="align-middle">Szczegóły</th>
+                                <th class="text-center">Lp</th>
+                                <th class="text-center">Nazwisko</th>
+                                <th class="text-center">Imię</th>
+                                <th class="text-center">Szczegóły</th>
                             </tr>
                         </tfoot>
                         <tbody>
                             @foreach ($coworkers ?? [] as $coworker)
                                 <tr>
-                                    <td class="align-middle">{{ $loop->iteration }}</td>
-                                    <td class="align-middle">{{ $coworker->surname }}</td>
-                                    <td class="align-middle">{{ $coworker->name }}</td>
-                                    <td class="align-middle">
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $coworker->surname }}</td>
+                                    <td class="text-center">{{ $coworker->name }}</td>
+                                    <td class="text-center">
                                         <a href="{{ route('coworker.ministry.list', ['id' => $coworker->id]) }}">Szczegóły</a>
                                     </td>
                                 </tr>

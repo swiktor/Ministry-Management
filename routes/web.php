@@ -17,8 +17,17 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(
     function () {
 
-        Route::get('/', 'MinistryController@dashboard')
-            ->name('ministry.dashboard');
+        Route::get('/', 'DashboardController@ministry')
+            ->name('dashboard.ministry');
+
+
+        Route::group([
+            'prefix' => 'dashboard',
+            'as' => 'dashboard.'
+        ], function () {
+            Route::get('report', 'DashboardController@report')
+            ->name('report');
+        });
 
         Route::group([
             'prefix' => 'ministry',
@@ -60,9 +69,6 @@ Route::middleware(['auth'])->group(
             'prefix' => 'report',
             'as' => 'report.'
         ], function () {
-            Route::get('dashboard', 'ReportController@dashboard')
-                ->name('dashboard');
-
             Route::get('list', 'ReportController@list')
                 ->name('list');
 

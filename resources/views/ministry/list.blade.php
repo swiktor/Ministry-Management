@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@section('title', 'Lista służb')
+
 @section('content')
 
     <div class="card mt-3">

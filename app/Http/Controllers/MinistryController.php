@@ -28,11 +28,6 @@ class MinistryController extends Controller
         $this->reportRepository = $reportRepository;
     }
 
-    public function dashboard()
-    {
-        return view('ministry.dashboard');
-    }
-
     public function list()
     {
         $ministries = $this->ministryRepository->allPaginated(10);

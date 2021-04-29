@@ -1,12 +1,12 @@
 <div class="sb-sidenav-menu-heading">Dashboard</div>
 <nav class="sb-sidenav-menu-nested">
-    <a class="nav-link" href="{{route('ministry.dashboard')}}">
+    <a class="nav-link" href="{{route('dashboard.ministry')}}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Służby
     </a>
 </nav>
 <nav class="sb-sidenav-menu-nested">
-    <a class="nav-link" href="{{route('report.dashboard')}}">
+    <a class="nav-link" href="{{route('dashboard.report')}}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Sprawozdania
     </a>

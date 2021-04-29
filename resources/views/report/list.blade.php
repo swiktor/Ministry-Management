@@ -1,39 +1,41 @@
 @extends('layouts.main')
 
+@section('title', 'Lista sprawozdań')
+
 @section('content')
 
     <div class="card mt-3">
         <div class="card">
-            <div class="card-header"><i class="fas fa-table mr-1"></i>Lista służb</div>
+            <div class="card-header"><i class="fas fa-table mr-1"></i>Lista sprawozdań</div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Lp</th>
-                                <th>Z kim</th>
-                                <th>Typ</th>
-                                <th>Kiedy</th>
-                                <th>Godziny</th>
-                                <th>Publikacje</th>
-                                <th>Filmy</th>
-                                <th>Odwiedziny</th>
-                                <th>Studia</th>
-                                <th>Szczegóły</th>
+                                <th class="align-middle">Lp</th>
+                                <th class="align-middle">Z kim</th>
+                                <th class="align-middle">Typ</th>
+                                <th class="align-middle">Kiedy</th>
+                                <th class="align-middle">Godziny</th>
+                                <th class="align-middle">Publikacje</th>
+                                <th class="align-middle">Filmy</th>
+                                <th class="align-middle">Odwiedziny</th>
+                                <th class="align-middle">Studia</th>
+                                <th class="align-middle">Opcje</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Lp</th>
-                                <th>Z kim</th>
-                                <th>Typ</th>
-                                <th>Kiedy</th>
-                                <th>Godziny</th>
-                                <th>Publikacje</th>
-                                <th>Filmy</th>
-                                <th>Odwiedziny</th>
-                                <th>Studia</th>
-                                <th>Szczegóły</th>
+                                <th class="align-middle">Lp</th>
+                                <th class="align-middle">Z kim</th>
+                                <th class="align-middle">Typ</th>
+                                <th class="align-middle">Kiedy</th>
+                                <th class="align-middle">Godziny</th>
+                                <th class="align-middle">Publikacje</th>
+                                <th class="align-middle">Filmy</th>
+                                <th class="align-middle">Odwiedziny</th>
+                                <th class="align-middle">Studia</th>
+                                <th class="align-middle">Opcje</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -54,7 +56,7 @@
                                     <td class="align-middle">{{data_get($ministry,'reports.studies')}}</td>
 
                                     <td class="align-middle">
-                                         <a href="{{route('report.edit.form',['id'=>data_get($ministry,'reports.id')])}}">Szczegóły</a>
+                                         <a href="{{route('report.edit.form',['id'=>data_get($ministry,'reports.id')])}}">Edytuj</a>
                                     </td>
                                 </tr>
                             @endforeach
