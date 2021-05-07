@@ -15,7 +15,7 @@ interface ReportRepository
 
     public function get(int $id);
 
-    public function allPaginated(int $limit);
+    public function allPaginated(int $month, int $year, int $limit);
 
     public function edit($data);
 

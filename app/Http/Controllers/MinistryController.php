@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Model\Report;
 use App\Model\Ministry;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Requests\AddMinistry;
 use App\Repository\TypeRepository;
 use Illuminate\Support\Facades\DB;
+use App\Repository\ReportRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\CoworkerRepository;
 use App\Repository\MinistryRepository;
-use App\Repository\ReportRepository;
 
 class MinistryController extends Controller
 {
@@ -28,12 +29,24 @@ class MinistryController extends Controller
         $this->reportRepository = $reportRepository;
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $ministries = $this->ministryRepository->allPaginated(10);
+        if (!empty($request->get('when'))) {
+            $when = $request->get('when');
+            $monthYear = explode('-', $when);
+            $year = $monthYear[0];
+            $month = $monthYear[1];
+        } else {
+            $month = Carbon::now()->format('m');
+            $year = Carbon::now()->format('Y');
+            $when = $year . '-' . $month;
+        }
+
+        $ministries = $this->ministryRepository->allPaginated($month, $year, 10);
 
         return view('ministry.list', [
             'ministries' => $ministries,
+            'when' => $when,
         ]);
     }
 

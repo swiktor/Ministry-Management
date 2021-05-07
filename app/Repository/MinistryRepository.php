@@ -15,7 +15,7 @@ interface MinistryRepository
 
     public function get(int $id);
 
-    public function allPaginated(int $limit);
+    public function allPaginated($month, $year, $limit);
 
     public function listForCoworker(int $id);
 

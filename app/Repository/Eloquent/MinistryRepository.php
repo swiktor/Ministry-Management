@@ -15,12 +15,10 @@ use App\Repository\MinistryRepository as MinistryRepositoryInterface;
 class MinistryRepository implements MinistryRepositoryInterface
 {
     private Ministry $ministryModel;
-    private Coworker $coworkerModel;
 
-    public function __construct(Ministry $ministryModel, Coworker $coworkerModel)
+    public function __construct(Ministry $ministryModel)
     {
         $this->ministryModel = $ministryModel;
-        $this->coworkerModel = $coworkerModel;
     }
 
     public function updateModel(Ministry $ministry, array $data): void
@@ -47,7 +45,7 @@ class MinistryRepository implements MinistryRepositoryInterface
             ->get();
     }
 
-    public function allPaginated(int $limit = 10)
+    public function allPaginated($month, $year, $limit)
     {
         return $this->ministryModel
             ->with('types')
@@ -58,7 +56,8 @@ class MinistryRepository implements MinistryRepositoryInterface
                     ->orderBy('name');
             }])
             ->where('user_id', Auth::id())
-            ->orderBy('when', 'desc')
+            ->whereRaw("id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
+            ->orderBy('when', 'asc')
             ->paginate($limit);
     }
 

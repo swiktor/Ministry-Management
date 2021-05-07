@@ -13,9 +13,19 @@ class Report extends Model
 
     protected $dates = ['hours'];
 
+    protected $casts = [
+        'placements' => 'integer',
+        'videos' => 'integer',
+        'returns' => 'integer',
+        'studies' => 'integer',
+    ];
+
+
+
     public function ministries()
     {
-        return $this->hasOne(Ministry::class, 'ministry_id', 'id');
+        // return $this->hasOne(Ministry::class, 'ministry_id', 'id');
+        return $this->hasOne(Ministry::class, 'id', 'ministry_id');
     }
 
     use HasFactory;

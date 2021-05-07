@@ -6,12 +6,17 @@
     </a>
 </nav>
 <nav class="sb-sidenav-menu-nested">
+    <a class="nav-link" href="{{route('dashboard.coworker')}}">
+        <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+        Współpracownicy
+    </a>
+</nav>
+<nav class="sb-sidenav-menu-nested">
     <a class="nav-link" href="{{route('dashboard.report')}}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Sprawozdania
     </a>
 </nav>
-
 <div class="sb-sidenav-menu-heading">Służby</div>
 <nav class="sb-sidenav-menu-nested">
     <a class="nav-link" href="{{route('ministry.list')}}">

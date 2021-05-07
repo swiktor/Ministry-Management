@@ -25,6 +25,8 @@ Route::middleware(['auth'])->group(
             'prefix' => 'dashboard',
             'as' => 'dashboard.'
         ], function () {
+            Route::get('coworker', 'DashboardController@coworker')
+            ->name('coworker');
             Route::get('report', 'DashboardController@report')
             ->name('report');
         });

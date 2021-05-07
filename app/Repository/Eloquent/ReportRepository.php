@@ -49,7 +49,7 @@ class ReportRepository implements ReportRepositoryInterface
             ->get();
     }
 
-    public function allPaginated(int $limit = 10)
+    public function allPaginated($month, $year, $limit)
     {
         return $this->ministryModel
             ->with('types')
@@ -61,7 +61,8 @@ class ReportRepository implements ReportRepositoryInterface
             }])
             ->with('reports')
             ->where('user_id', Auth::id())
-            ->orderBy('when', 'desc')
+            ->whereRaw("id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
+            ->orderBy('when', 'asc')
             ->paginate($limit);
     }
 
