@@ -39,10 +39,17 @@ Route::middleware(['auth'])->group(
                 ->name('list');
 
             Route::get('add/form', 'MinistryController@addForm')
-                ->name('add.form');
+                ->name('form.add');
 
             Route::post('add', 'MinistryController@add')
                 ->name('add');
+
+            Route::get('edit/form/{id}', 'MinistryController@editForm')
+            ->name('form.edit');
+
+            Route::post('edit', 'MinistryController@edit')
+            ->name('edit');
+
         });
 
         Route::group([

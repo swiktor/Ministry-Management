@@ -28,7 +28,7 @@
                                 <th class="align-middle">Z kim</th>
                                 <th class="align-middle">Typ</th>
                                 <th class="align-middle">Kiedy</th>
-                                <th class="align-middle">Szczegóły</th>
+                                <th class="align-middle">Opcje</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -37,7 +37,7 @@
                                 <th class="align-middle">Z kim</th>
                                 <th class="align-middle">Typ</th>
                                 <th class="align-middle">Kiedy</th>
-                                <th class="align-middle">Szczegóły</th>
+                                <th class="align-middle">Opcje</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -54,8 +54,15 @@
                                     </td>
                                     <td class="align-middle">{{ $ministry->when->format('d.m.Y H:i') }}</td>
                                     <td class="align-middle">
-                                        <a
-                                            href="{{ route('report.edit.form', ['id' => $ministry->reports->id]) }}">Szczegóły</a>
+                                        <a href="{{ route('report.edit.form', ['id' => $ministry->reports->id]) }}">
+                                            <button class="btn btn-info">Sprawozdanie</button>
+                                        </a>
+                                        <a href="{{ route('ministry.form.edit', ['id' => $ministry->id]) }}">
+                                            <button class="btn btn-warning">Edytuj</button>
+                                        </a>
+                                        <a href="{{ route('report.edit.form', ['id' => $ministry->reports->id]) }}">
+                                            <button class="btn btn-danger">Usuń</button>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

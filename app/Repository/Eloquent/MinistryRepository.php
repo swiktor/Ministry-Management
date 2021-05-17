@@ -61,9 +61,12 @@ class MinistryRepository implements MinistryRepositoryInterface
             ->paginate($limit);
     }
 
-    public function get(int $id): Ministry
+    public function get(int $id)
     {
-        return $this->ministryModel->find($id);
+        return $this->ministryModel
+        ->with('coworkers')
+        ->where('id',$id)
+        ->get();
     }
 
     public function listForCoworker(int $id)

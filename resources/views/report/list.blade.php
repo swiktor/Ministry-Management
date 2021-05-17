@@ -69,7 +69,9 @@
 
                                     <td class="align-middle">
                                         <a
-                                            href="{{ route('report.edit.form', ['id' => data_get($ministry, 'reports.id')]) }}">Edytuj</a>
+                                            href="{{ route('report.edit.form', ['id' => data_get($ministry, 'reports.id')]) }}">
+                                            <button class="btn btn-warning">Edytuj</button>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

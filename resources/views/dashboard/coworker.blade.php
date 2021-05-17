@@ -27,7 +27,7 @@
                                 <th class="text-center">Nazwisko</th>
                                 <th class="text-center">Imię</th>
                                 <th class="text-center">Ilość wyruszeń</th>
-                                <th class="text-center">Szczegóły</th>
+                                <th class="text-center">Opcje</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -36,7 +36,7 @@
                                 <th class="text-center">Nazwisko</th>
                                 <th class="text-center">Imię</th>
                                 <th class="text-center">Ilość wyruszeń</th>
-                                <th class="text-center">Szczegóły</th>
+                                <th class="text-center">Opcje</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -48,7 +48,9 @@
                                     <td class="text-center">{{ $coworker->count }}</td>
                                     <td class="text-center">
                                         <a
-                                            href="{{ route('coworker.ministry.list', ['id' => $coworker->coworker_id]) }}">Szczegóły</a>
+                                            href="{{ route('coworker.ministry.list', ['id' => $coworker->coworker_id]) }}">
+                                            <button class="btn btn-info">Lista służb</button>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

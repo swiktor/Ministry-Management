@@ -23,7 +23,7 @@
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Lista
     </a>
-    <a class="nav-link" href="{{route('ministry.add.form')}}">
+    <a class="nav-link" href="{{route('ministry.form.add')}}">
         <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
         Umów
     </a>

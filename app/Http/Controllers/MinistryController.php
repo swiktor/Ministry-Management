@@ -58,6 +58,7 @@ class MinistryController extends Controller
         return view('ministry.add', [
             'coworkers' => $coworkers,
             'types' => $types,
+            'title' => 'Umów',
         ]);
     }
 
@@ -83,5 +84,30 @@ class MinistryController extends Controller
         return view('ministry.list', [
             'ministries' => $ministries,
         ]);
+    }
+
+    public function editForm(int $id)
+    {
+        $ministry = $this->ministryRepository->get($id);
+        $coworkers = $this->coworkerRepository->allActive();
+        $types = $this->typeRepository->all();
+
+        return view('ministry.edit', [
+            'coworkers' => $coworkers,
+            'types' => $types,
+            'ministry' => $ministry,
+        ]);
+    }
+
+    public function edit(Request $request)
+    {
+        $ministry = new Ministry([
+            'id'=>$request->get('id'),
+            'type_id'=>$request->get('type'),
+            'when'=>$request->get('when'),
+            'user_id'=>Auth::id(),
+            ]);
+        $coworkers_id=$request->get('coworker');
+
     }
 }
