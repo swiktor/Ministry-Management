@@ -19,9 +19,7 @@ class CoworkersSeeder extends Seeder
         $count = DB::table('coworkers')->count();
         if ($count == 0) {
 
-            $faker = Factory::create();
-            DB::table('coworkers')->truncate();
-
+            $faker = Factory::create('pl_PL');
 
             for ($j = 0; $j < 1; $j++) {
                 $coworkers = [];

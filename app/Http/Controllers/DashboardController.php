@@ -3,21 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Repository\DashboardRepository;
 use Illuminate\Support\Carbon;
+use App\Repository\GoalRepository;
+use App\Repository\DashboardRepository;
 
 class DashboardController extends Controller
 {
 
     private DashboardRepository $dashboardRepository;
+    private GoalRepository $goalRepository;
 
-    public function __construct(DashboardRepository $dashboardRepository)
+    public function __construct(DashboardRepository $dashboardRepository, GoalRepository $goalRepository)
     {
         $this->dashboardRepository = $dashboardRepository;
+        $this->goalRepository = $goalRepository;
+
     }
 
     public function report(Request $request)
     {
+
+if($request['type']===null)
+{
+    dump('pusto');
+}
+else
+{
+    echo 'AAAAAAAA';
+}
+
         if (!empty($request->get('when'))) {
             $when = $request->get('when');
             $monthYear = explode('-', $when);
@@ -30,8 +44,10 @@ class DashboardController extends Controller
         }
 
         $monthSum = $this->dashboardRepository->monthSum($month, $year);
+        $goals = $this->goalRepository->all();
 
-        return view('dashboard.report', ['monthSum' => $monthSum,'when' => $when]);
+
+        return view('dashboard.report', ['monthSum' => $monthSum,'when' => $when,'goals' =>$goals]);
     }
 
     public function ministry()

@@ -22,4 +22,13 @@ interface MinistryRepository
     public function listForCoworkerPaginated(int $id, int $limit);
 
     public function add($data);
+
+    public function compare(Ministry $ministry);
+
+    public function edit(Ministry $ministry);
+
+    public function deleteCoworkersFromMinistry(Ministry $ministry_db, $coworkers_id_db);
+
+    public function delete(int $id);
+
 }

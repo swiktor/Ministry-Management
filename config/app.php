@@ -2,6 +2,7 @@
 
 use App\Providers\CoworkerServiceProvider;
 use App\Providers\DashboardServiceProvider;
+use App\Providers\GoalServiceProvider;
 use App\Providers\MinistryServiceProvider;
 use App\Providers\ReportServiceProvider;
 use App\Providers\TypeServiceProvider;
@@ -186,6 +187,7 @@ return [
         ReportServiceProvider::class,
         TypeServiceProvider::class,
         DashboardServiceProvider::class,
+        GoalServiceProvider::class,
 
     ],
 

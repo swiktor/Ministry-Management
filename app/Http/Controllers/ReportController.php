@@ -5,15 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\EditReport;
+use App\Repository\GoalRepository;
 use App\Repository\ReportRepository;
 
 class ReportController extends Controller
 {
     private ReportRepository $reportRepository;
 
-    public function __construct(ReportRepository $repository)
+    public function __construct(ReportRepository $reportRepository)
     {
-        $this->reportRepository = $repository;
+        $this->reportRepository = $reportRepository;
     }
 
     public function list(Request $request)
@@ -33,7 +34,8 @@ class ReportController extends Controller
 
         return view('report.list', [
             'ministries' => $reports,
-            'when' => $when
+            'when' => $when,
+
         ]);
     }
 
@@ -50,7 +52,6 @@ class ReportController extends Controller
     public function editForm(int $id)
     {
         $report = $this->reportRepository->get($id);
-        return view('report.edit',['report'=> $report]);
+        return view('report.edit', ['report' => $report]);
     }
-
 }

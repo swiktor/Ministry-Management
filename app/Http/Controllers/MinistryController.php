@@ -101,13 +101,46 @@ class MinistryController extends Controller
 
     public function edit(Request $request)
     {
-        $ministry = new Ministry([
-            'id'=>$request->get('id'),
-            'type_id'=>$request->get('type'),
-            'when'=>$request->get('when'),
-            'user_id'=>Auth::id(),
-            ]);
-        $coworkers_id=$request->get('coworker');
+        $ministry_form = new Ministry();
 
+        $ministry_form['id'] = (int)$request->get('id');
+        $ministry_form['type_id'] = (int)$request->get('type');
+        $ministry_form['when'] = $request->get('when');
+        $ministry_form['coworkers'] = $request->get('coworker');
+        $ministry_form['user_id'] = Auth::id();
+
+        $shouldEdited = $this->ministryRepository->compare($ministry_form);
+
+        if (!$shouldEdited) {
+            return redirect()
+                ->route('ministry.list')
+                ->with('info', 'Nie potrzeba edytować służby');
+        } else {
+            $isEdited = $this->ministryRepository->edit($ministry_form);
+            if ($isEdited) {
+                return redirect()
+                    ->route('ministry.list')
+                    ->with('success', 'Pomyślnie edytowano służbę');
+            } else {
+                return redirect()
+                    ->route('ministry.list')
+                    ->with('error', 'Nie udało się edytować służby');
+            }
+        }
+    }
+
+    public function delete(int $id)
+    {
+        $deleted = $this->ministryRepository->delete($id);
+
+        if ($deleted) {
+            return redirect()
+                ->route('ministry.list')
+                ->with('success', 'Pomyślnie usunięto służbę');
+        } else {
+            return redirect()
+                ->route('ministry.list')
+                ->with('error', 'Nie udało się usunąć służby');
+        }
     }
 }

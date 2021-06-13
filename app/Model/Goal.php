@@ -11,5 +11,6 @@ class Goal extends Model
         'name', 'quantum'
     ];
 
+
     use HasFactory;
 }

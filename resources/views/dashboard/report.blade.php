@@ -1,7 +1,7 @@
+
 @extends('layouts.main')
 
 @section('title', 'Sprawozdanie miesięczne')
-
 @section('content')
 
     <div class="row mt-3">
@@ -20,6 +20,36 @@
                                 <br>
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">
                                     <button type="submit" class="btn btn-primary mb-1 align-items-center">Wyszukaj</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-x col-xl-3 col-md-6 mb-4">
+            <div class="card border-left shadow-sm py-2 h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <form action="{{ route('dashboard.report') }}">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">Wybierz
+                                    cel godzinowy:
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                    <select class="selectpicker form-control @error('type') is-invalid @enderror"
+                                        name="type" data-live-search="true" required>
+
+                                        @foreach ($goals as $goal)
+                                            <option value={{ $goal->id }}>
+                                                {{ $goal->name . ' (' . substr($goal->quantum, 0, -3) . ')' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">
+                                    <button type="submit" class="btn btn-primary mb-1 align-items-center">Zmień</button>
                                 </div>
                             </form>
                         </div>

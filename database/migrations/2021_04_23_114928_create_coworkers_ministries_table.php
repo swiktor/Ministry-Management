@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCoworkerMinistriesTable extends Migration
+class CreateCoworkersMinistriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCoworkerMinistriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('coworkerMinistries', function (Blueprint $table) {
+        Schema::create('coworkers_ministries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('coworker_id')->constrained();
             $table->foreignId('ministry_id')->constrained();
@@ -28,6 +28,6 @@ class CreateCoworkerMinistriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coworkerMinistries');
+        Schema::dropIfExists('coworkers_ministries');
     }
 }

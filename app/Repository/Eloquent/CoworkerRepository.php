@@ -53,7 +53,7 @@ class CoworkerRepository implements CoworkerRepositoryInterface
 
     public function neverActive()
     {
-        $ids = DB::table('coworkerministries')
+        $ids = DB::table('coworkers_ministries')
             ->select('coworker_id')
             ->distinct()
             ->pluck('coworker_id')
@@ -69,7 +69,7 @@ class CoworkerRepository implements CoworkerRepositoryInterface
 
     public function neverActivePaginated(int $limit = 10)
     {
-        $ids = DB::table('coworkerministries')
+        $ids = DB::table('coworkers_ministries')
             ->select('coworker_id')
             ->distinct()
             ->pluck('coworker_id')
@@ -95,7 +95,7 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function addToMinistry($coworkers, $ministry_id)
     {
         foreach ($coworkers ?? [] as $coworker) {
-            DB::table('coworkerministries')->insert([
+            DB::table('coworkers_ministries')->insert([
                 'coworker_id' => $coworker,
                 'ministry_id' => $ministry_id
             ]);

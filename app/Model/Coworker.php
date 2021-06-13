@@ -14,7 +14,7 @@ class Coworker extends Model
 
     public function ministries()
     {
-        return $this->belongsToMany(Coworker::class, 'coworkerMinistries');
+        return $this->belongsToMany(Coworker::class, 'coworkers_ministries');
     }
 
 

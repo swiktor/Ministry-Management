@@ -1,6 +1,6 @@
     <div class="alert alert-danger alert-block mt-2">
         <button type="button" class="close" data-dismiss="alert">×</button>
-        <strong>Edycja służby + usuń słuzbę / cel osobowy / bilans pioniera</strong>
+        <strong>cel osobowy / bilans pioniera</strong>
     </div>
 
     @if ($message = Session::get('success'))

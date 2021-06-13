@@ -50,6 +50,9 @@ Route::middleware(['auth'])->group(
             Route::post('edit', 'MinistryController@edit')
             ->name('edit');
 
+            Route::get('delete/{id}', 'MinistryController@delete')
+            ->name('delete');
+
         });
 
         Route::group([

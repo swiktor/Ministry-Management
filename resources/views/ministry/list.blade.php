@@ -60,7 +60,7 @@
                                         <a href="{{ route('ministry.form.edit', ['id' => $ministry->id]) }}">
                                             <button class="btn btn-warning">Edytuj</button>
                                         </a>
-                                        <a href="{{ route('report.edit.form', ['id' => $ministry->reports->id]) }}">
+                                        <a href="{{ route('ministry.delete', ['id' => $ministry->reports->id]) }}">
                                             <button class="btn btn-danger">Usuń</button>
                                         </a>
                                     </td>

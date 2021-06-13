@@ -15,7 +15,6 @@ class GoalsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('goals')->truncate();
         DB::table('goals')->insert([
             [
                 'id' => '1',
