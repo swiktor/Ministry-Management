@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Repository\GoalRepository;
 use App\Repository\DashboardRepository;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -17,21 +18,10 @@ class DashboardController extends Controller
     {
         $this->dashboardRepository = $dashboardRepository;
         $this->goalRepository = $goalRepository;
-
     }
 
     public function report(Request $request)
     {
-
-if($request['type']===null)
-{
-    dump('pusto');
-}
-else
-{
-    echo 'AAAAAAAA';
-}
-
         if (!empty($request->get('when'))) {
             $when = $request->get('when');
             $monthYear = explode('-', $when);
@@ -45,9 +35,20 @@ else
 
         $monthSum = $this->dashboardRepository->monthSum($month, $year);
         $goals = $this->goalRepository->all();
+        $goal_id = Auth::user()->goal_id;
 
+        if ($request['goal'] !== null) {
+            $goal_id = (int) $request['goal'];
+            $user = Auth::user();
+            $user->goal_id = $goal_id;
+            $user->save();
 
-        return view('dashboard.report', ['monthSum' => $monthSum,'when' => $when,'goals' =>$goals]);
+            return redirect()
+                ->route('dashboard.report', ['monthSum' => $monthSum, 'when' => $when, 'goals' => $goals, 'goal_id'=> $goal_id])
+                ->with('success', 'Pomyślnie zmieniono cel godzinowy!');
+        }
+
+        return view('dashboard.report', ['monthSum' => $monthSum, 'when' => $when, 'goals' => $goals, 'goal_id' => $goal_id]);
     }
 
     public function ministry()
@@ -74,6 +75,6 @@ else
 
         $coworkers = $this->dashboardRepository->coworkersBalance($month, $year, 10);
 
-        return view('dashboard.coworker', ['coworkers' => $coworkers, 'when' =>$when]);
+        return view('dashboard.coworker', ['coworkers' => $coworkers, 'when' => $when]);
     }
 }

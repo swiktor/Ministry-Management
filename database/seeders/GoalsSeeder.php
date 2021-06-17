@@ -47,7 +47,7 @@ class GoalsSeeder extends Seeder
             [
                 'id' => '5',
                 'name' => 'Pionier stały',
-                'quantum' => '50:00:00',
+                'quantum' => '70:00:00',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

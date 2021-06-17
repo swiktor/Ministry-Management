@@ -1,4 +1,3 @@
-
 @extends('layouts.main')
 
 @section('title', 'Sprawozdanie miesięczne')
@@ -37,13 +36,18 @@
                                     cel godzinowy:
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                    <select class="selectpicker form-control @error('type') is-invalid @enderror"
-                                        name="type" data-live-search="true" required>
-
+                                    <select class="selectpicker form-control @error('goal') is-invalid @enderror"
+                                        name="goal" data-live-search="true" required>
                                         @foreach ($goals as $goal)
-                                            <option value={{ $goal->id }}>
-                                                {{ $goal->name . ' (' . substr($goal->quantum, 0, -3) . ')' }}
-                                            </option>
+                                            @if ($goal_id == $goal->id)
+                                                <option value={{ $goal->id }} selected>
+                                                    {{ $goal->name . ' (' . substr($goal->quantum, 0, -3) . ')' }}
+                                                </option>
+                                            @else
+                                                <option value={{ $goal->id }}>
+                                                    {{ $goal->name . ' (' . substr($goal->quantum, 0, -3) . ')' }}
+                                                </option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -153,6 +157,24 @@
     </div>
 
     <div class="row mt-3">
+
+
+        <div class="col-x col-xl-3 col-md-6 mb-4">
+            <div class="card border-left shadow-sm py-2 h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">Suma
+                                służby z
+                                typów</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
+                                {{ $monthSum[0]->s_types }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-x col-xl-3 col-md-6 mb-4">
             <div class="card border-left shadow-sm py-2 h-100">
                 <div class="card-body">
@@ -160,7 +182,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">
                                 Miesięczny
-                                bilans godzin
+                                balans godzin
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
                                 {{ $monthSum[0]->hour_difference }}</div>
@@ -175,32 +197,18 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">Suma
-                                służby z
-                                typów</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->balance_s_types_quantum }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-x col-xl-3 col-md-6 mb-4">
-            <div class="card border-left shadow-sm py-2 h-100">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">
                                 Nadmiar /
                                 niedobór godzin
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->balance_expectations_real }}</div>
+                                {{ $monthSum[0]->real_balance }}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-x col-xl-3 col-md-6 mb-4">
             <div class="card border-left shadow-sm py-2 h-100">
                 <div class="card-body">
@@ -221,6 +229,4 @@
             </div>
         </div>
     </div>
-
-
 @endsection
