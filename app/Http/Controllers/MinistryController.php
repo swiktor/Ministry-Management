@@ -44,7 +44,7 @@ class MinistryController extends Controller
 
         $ministries = $this->ministryRepository->allPaginated($month, $year, 10);
 
-        return view('ministry.list', [
+            return view('ministry.list', [
             'ministries' => $ministries,
             'when' => $when,
         ]);
@@ -71,6 +71,8 @@ class MinistryController extends Controller
         $this->coworkerRepository->addToMinistry($data['coworker'], $ministry_id);
 
         $this->reportRepository->add($ministry_id);
+
+        $this->ministryRepository->setInGoogleCalendar($ministry_id);
 
         return redirect()
             ->route('ministry.list')

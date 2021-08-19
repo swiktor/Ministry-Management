@@ -23,6 +23,8 @@ interface MinistryRepository
 
     public function add($data);
 
+    public function setInGoogleCalendar($ministry_id);
+
     public function compare(Ministry $ministry);
 
     public function edit(Ministry $ministry);

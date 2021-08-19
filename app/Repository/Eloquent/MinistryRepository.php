@@ -7,11 +7,13 @@ namespace App\Repository\Eloquent;
 use App\Model\Coworker;
 use App\Model\Ministry;
 use App\Model\Report;
+use App\Model\Type;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\MinistryRepository as MinistryRepositoryInterface;
+use Spatie\GoogleCalendar\Event;
 
 
 class MinistryRepository implements MinistryRepositoryInterface
@@ -118,6 +120,47 @@ class MinistryRepository implements MinistryRepositoryInterface
 
         return $ministry->id;
     }
+
+    public function setInGoogleCalendar($ministry_id)
+    {
+        $ministry = $this->get($ministry_id)[0];
+
+        $coworkers = "";
+
+        for ($i = 0; $i < sizeof($ministry->coworkers); $i++) {
+            if ($i == 0) {
+                $coworkers = $ministry->coworkers[$i]->name . ' ' . $ministry->coworkers[$i]->surname;
+            } else {
+                $coworkers = $coworkers . ", " . $ministry->coworkers[$i]->name . ' ' . $ministry->coworkers[$i]->surname;
+            }
+        }
+
+        $type_name = Type::find($ministry->type_id)->name;
+
+        $type_duration = strtotime(Type::find($ministry->type_id)->duration->toTimeString());
+        $ministry_when_duration = strtotime($ministry->when->toTimeString()) + $type_duration;
+        $ministry_end_time_helper = date_create();
+        date_timestamp_set($ministry_end_time_helper, $ministry_when_duration);
+        $ministry_end_time = $ministry->when->toDateString() . " " . date_format($ministry_end_time_helper, 'H:i:s');
+
+        $startDateTime = new Carbon($ministry->when->toDateTimeString(), 'Europe/Warsaw' );
+        $endDateTime = new Carbon($ministry_end_time, 'Europe/Warsaw');
+
+        $event = new Event;
+        $event->name = $coworkers;
+        $event->description = $type_name;
+        $event->startDateTime = $startDateTime;
+        $event->endDateTime = $endDateTime;
+
+        $calendarEvent = $event->save();
+
+        $ministry = Ministry::find($ministry_id);
+        $ministry->event_id = $calendarEvent->id;
+        $ministry->save();
+
+    }
+
+
 
     public function compare(Ministry $ministry_form)
     {
