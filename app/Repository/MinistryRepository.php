@@ -25,6 +25,8 @@ interface MinistryRepository
 
     public function setInGoogleCalendar($ministry_id);
 
+    public function deleteFromGoogleCalendar($ministry_id);
+
     public function compare(Ministry $ministry);
 
     public function edit(Ministry $ministry);

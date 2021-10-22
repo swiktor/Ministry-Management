@@ -120,6 +120,8 @@ class MinistryController extends Controller
         } else {
             $isEdited = $this->ministryRepository->edit($ministry_form);
             if ($isEdited) {
+                $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
+                $this->ministryRepository->setInGoogleCalendar($ministry_form['id']);
                 return redirect()
                     ->route('ministry.list')
                     ->with('success', 'Pomyślnie edytowano służbę');

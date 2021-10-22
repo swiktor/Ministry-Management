@@ -143,7 +143,7 @@ class MinistryRepository implements MinistryRepositoryInterface
         date_timestamp_set($ministry_end_time_helper, $ministry_when_duration);
         $ministry_end_time = $ministry->when->toDateString() . " " . date_format($ministry_end_time_helper, 'H:i:s');
 
-        $startDateTime = new Carbon($ministry->when->toDateTimeString(), 'Europe/Warsaw' );
+        $startDateTime = new Carbon($ministry->when->toDateTimeString(), 'Europe/Warsaw');
         $endDateTime = new Carbon($ministry_end_time, 'Europe/Warsaw');
 
         $event = new Event;
@@ -157,10 +157,15 @@ class MinistryRepository implements MinistryRepositoryInterface
         $ministry = Ministry::find($ministry_id);
         $ministry->event_id = $calendarEvent->id;
         $ministry->save();
-
     }
 
-
+    public function deleteFromGoogleCalendar($ministry_id)
+    {
+        $ministry = Ministry::find($ministry_id);
+        $event = Event::find($ministry->event_id);
+        $event->delete();
+        return 1;
+    }
 
     public function compare(Ministry $ministry_form)
     {
@@ -236,12 +241,12 @@ class MinistryRepository implements MinistryRepositoryInterface
         return 1;
     }
 
-    public function delete(int $id)
+    public function delete(int $ministry_id)
     {
         $ministry_db =
             $this->ministryModel
             ->with('coworkers')
-            ->where('id', $id)
+            ->where('id', $ministry_id)
             ->get();
 
         $ministry_db = $ministry_db[0];
@@ -252,7 +257,11 @@ class MinistryRepository implements MinistryRepositoryInterface
             array_push($coworkers_id_db, $coworker['id']);
         }
 
-        if (($this->deleteCoworkersFromMinistry($ministry_db, $coworkers_id_db)) && (Report::where('ministry_id', '=', [$id])->delete()) && (Ministry::find($id)->delete())) {
+        if (($this->deleteCoworkersFromMinistry($ministry_db, $coworkers_id_db))
+            && ($this->deleteFromGoogleCalendar($ministry_id))
+            && (Report::where('ministry_id', '=', [$ministry_id])->delete())
+            && (Ministry::find($ministry_id)->delete())
+        ) {
             return 1;
         } else {
             return 0;
