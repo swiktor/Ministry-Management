@@ -66,9 +66,6 @@
                                     @include('shared.sidebar')
                                 </div>
                             </div>
-                            <div class="sb-sidenav-footer">
-                                Sidenav Footer
-                            </div>
                         @show
                     </nav>
                 </div>
@@ -82,7 +79,7 @@
                     <footer class="py-4 bg-light mt-auto">
                         <div class="container-fluid">
                             <div class="d-flex align-items-center justify-content-between small">
-                                <div class="text-muted">Fluid footer</div>
+                                <div class="text-muted">Szymon Wiktor {{ now()->year }}</div>
                                 <div>
                                 </div>
                             </div>

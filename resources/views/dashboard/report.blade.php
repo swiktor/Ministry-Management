@@ -72,7 +72,7 @@
                                 Publikacje
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->s_placements }}</div>
+                                {{ $monthSum[0]->s_placements ?? 0 }}</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-book-open fa-2x text-gray-300"></i>
@@ -89,7 +89,7 @@
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">Filmy
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->s_videos }}
+                                {{ $monthSum[0]->s_videos ?? 0 }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -107,7 +107,7 @@
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">
                                 Godziny</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->s_hours }}
+                                {{ $monthSum[0]->s_hours ?? 0 }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -126,7 +126,7 @@
                                 Odwiedziny
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->s_returns }}
+                                {{ $monthSum[0]->s_returns ?? 0 }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -144,7 +144,7 @@
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-center">
                                 Studia</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->s_studies }}
+                                {{ $monthSum[0]->s_studies ?? 0}}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -168,7 +168,7 @@
                                 służby z
                                 typów</div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->s_types }}</div>
+                                {{ $monthSum[0]->s_types ?? '00:00'}}</div>
                         </div>
                     </div>
                 </div>
@@ -185,7 +185,7 @@
                                 balans godzin
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->hour_difference }}</div>
+                                {{ $monthSum[0]->hour_difference ?? '00:00' }}</div>
                         </div>
                     </div>
                 </div>
@@ -202,7 +202,7 @@
                                 niedobór godzin
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800 text-center">
-                                {{ $monthSum[0]->real_balance }}</div>
+                                {{ $monthSum[0]->real_balance ?? '00:00' }}</div>
                         </div>
                     </div>
                 </div>
