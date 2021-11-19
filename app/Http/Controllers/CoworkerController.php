@@ -4,25 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\AddCoworker;
-use App\Model\Coworker;
+use App\Repository\CongregationRepository;
 use App\Repository\CoworkerRepository;
 
 class CoworkerController extends Controller
 {
-
     private CoworkerRepository $coworkerRepository;
+    private CongregationRepository $congregationRepository;
 
-    public function __construct(CoworkerRepository $repository)
+    public function __construct(CoworkerRepository $coworkerRepository, CongregationRepository $congregationRepository)
     {
-        $this->coworkerRepository = $repository;
+        $this->coworkerRepository = $coworkerRepository;
+        $this->congregationRepository = $congregationRepository;
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $coworkers = $this->coworkerRepository->allActivePaginated(10);
+        if (!empty($request->get('congregation'))) {
+            $congregation = $request->get('congregation');
+        } else {
+            $congregation = "1";
+        }
+
+        $coworkers = $this->coworkerRepository->allActivePaginated($congregation, 10);
+        $congregations = $this->congregationRepository->all();
 
         return view('coworker.list', [
             'coworkers' => $coworkers,
+            'congregations' => $congregations,
+            'congregation_selected' => $congregation,
         ]);
     }
 
@@ -30,7 +40,7 @@ class CoworkerController extends Controller
     {
         $coworkers = $this->coworkerRepository->neverActivePaginated(10);
 
-        return view('coworker.list', [
+        return view('coworker.never', [
             'coworkers' => $coworkers,
         ]);
     }
@@ -48,6 +58,9 @@ class CoworkerController extends Controller
 
     public function addForm()
     {
-        return view('coworker.add');
+        $congregations = $this->congregationRepository->all();
+        return view('coworker.add', [
+            'congregations' => $congregations
+        ]);
     }
 }

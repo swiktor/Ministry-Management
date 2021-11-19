@@ -31,17 +31,19 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function allActive(): Collection
     {
         return $this->coworkerModel
+            ->with('congregations')
             ->orderBy('surname')
             ->orderBy('name')
             ->where('active', 1)
             ->get();
     }
 
-    public function allActivePaginated(int $limit = 10)
+    public function allActivePaginated($congregation, int $limit = 10)
     {
         return $this->coworkerModel
             ->orderBy('surname')
             ->orderBy('name')
+            ->where('congregation_id', $congregation)
             ->where('active', 1)
             ->paginate($limit);
     }
@@ -88,6 +90,7 @@ class CoworkerRepository implements CoworkerRepositoryInterface
         $coworker = new Coworker();
         $coworker->name = $data['name'];
         $coworker->surname = $data['surname'];
+        $coworker->congregation_id = $data['congregation'];
 
         $coworker->save();
     }

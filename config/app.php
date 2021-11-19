@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\CongregationServiceProvider;
 use App\Providers\CoworkerServiceProvider;
 use App\Providers\DashboardServiceProvider;
 use App\Providers\GoalServiceProvider;
@@ -188,6 +189,7 @@ return [
         TypeServiceProvider::class,
         DashboardServiceProvider::class,
         GoalServiceProvider::class,
+        CongregationServiceProvider::class,
 
     ],
 

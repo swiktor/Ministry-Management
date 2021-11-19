@@ -24,8 +24,9 @@ class AddCoworker extends FormRequest
     public function rules()
     {
          return [
-            'name' => 'required|string',
-            'surname' => 'required|string|min:3'
+            'name' => 'required|string|min:3',
+            'surname' => 'required|string|min:3',
+            'congregation' => 'required|integer'
         ];
     }
 
@@ -37,6 +38,7 @@ class AddCoworker extends FormRequest
             'name.required' => 'Pole wymagane',
             'surname.string' => 'Możesz wpisać tylko litery',
             'rate.min' => 'Minimalna ilość liter to: :min',
+            'congregation.integer' => 'Wybierz poprawny zbór',
         ];
     }
 }

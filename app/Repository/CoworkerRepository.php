@@ -15,7 +15,7 @@ interface CoworkerRepository
 
     public function get(int $id);
 
-    public function allActivePaginated(int $limit);
+    public function allActivePaginated(int $congregation, int $limit);
 
     public function neverActive();
 
