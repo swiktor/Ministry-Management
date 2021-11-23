@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Repository\Eloquent;
 
-use App\Model\Coworker;
-use App\Model\Ministry;
-use App\Model\Report;
 use App\Model\Type;
+use App\Model\Report;
+use App\Model\Ministry;
 use Illuminate\Support\Carbon;
+use Spatie\GoogleCalendar\Event;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\MinistryRepository as MinistryRepositoryInterface;
-use Spatie\GoogleCalendar\Event;
-
 
 class MinistryRepository implements MinistryRepositoryInterface
 {
@@ -146,23 +144,25 @@ class MinistryRepository implements MinistryRepositoryInterface
         $startDateTime = new Carbon($ministry->when->toDateTimeString(), 'Europe/Warsaw');
         $endDateTime = new Carbon($ministry_end_time, 'Europe/Warsaw');
 
-        $event = new Event;
-        $event->name = $coworkers;
-        $event->description = $type_name;
-        $event->startDateTime = $startDateTime;
-        $event->endDateTime = $endDateTime;
-
-        $calendarEvent = $event->save();
+        $event = Event::create(
+            [
+                'name' => $coworkers,
+                'description' => $type_name,
+                'startDateTime' => $startDateTime,
+                'endDateTime' => $endDateTime
+            ],
+            Auth::user()->googleAccounts[0]->name
+        );
 
         $ministry = Ministry::find($ministry_id);
-        $ministry->event_id = $calendarEvent->id;
+        $ministry->event_id = $event->id;
         $ministry->save();
     }
 
     public function deleteFromGoogleCalendar($ministry_id)
     {
         $ministry = Ministry::find($ministry_id);
-        $event = Event::find($ministry->event_id);
+        $event = Event::find($ministry->event_id, Auth::user()->googleAccounts[0]->name);
         $event->delete();
         return 1;
     }

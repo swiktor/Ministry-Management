@@ -9,4 +9,8 @@ use Illuminate\Support\Collection;
 interface CongregationRepository
 {
     public function all(): Collection;
+
+    public function allPaginated($limit);
+
+    public function add($data);
 }

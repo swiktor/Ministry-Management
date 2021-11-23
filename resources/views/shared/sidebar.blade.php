@@ -52,3 +52,15 @@
         Lista
     </a>
 </nav>
+
+<div class="sb-sidenav-menu-heading">Zbory</div>
+<nav class="sb-sidenav-menu-nested">
+    <a class="nav-link" href="{{route('congregation.list')}}">
+        <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+        Lista
+    </a>
+        <a class="nav-link" href="{{route('congregation.add.form')}}">
+        <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
+        Dodaj
+    </a>
+</nav>

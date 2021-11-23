@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\AddCoworker;
-use App\Repository\CongregationRepository;
+use Illuminate\Support\Facades\Auth;
 use App\Repository\CoworkerRepository;
+use App\Repository\CongregationRepository;
 
 class CoworkerController extends Controller
 {
@@ -20,10 +21,11 @@ class CoworkerController extends Controller
 
     public function list(Request $request)
     {
+
         if (!empty($request->get('congregation'))) {
             $congregation = $request->get('congregation');
         } else {
-            $congregation = "1";
+            $congregation = Auth::user()->congregation_id;
         }
 
         $coworkers = $this->coworkerRepository->allActivePaginated($congregation, 10);

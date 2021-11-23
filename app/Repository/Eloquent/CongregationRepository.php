@@ -23,4 +23,19 @@ class CongregationRepository implements CongregationRepositoryInterface
             ->orderBy('name')
             ->get();
     }
+
+    public function allPaginated($limit)
+    {
+        return $this->congregationModel
+            ->orderBy('name')
+            ->paginate($limit);
+    }
+
+    public function add($data)
+    {
+        $congregation = new Congregation();
+        $congregation->name = $data['name'];
+        $congregation->save();
+    }
+
 }

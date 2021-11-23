@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'goal_id',
+        'name', 'email', 'password', 'goal_id', 'congregation_id'
     ];
 
     /**
@@ -42,4 +42,8 @@ class User extends Authenticatable
         return $this->hasMany(Ministry::class, 'user_id', 'id');
     }
 
+    public function googleAccounts()
+    {
+        return $this->hasMany(GoogleAccount::class);
+    }
 }
