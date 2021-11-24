@@ -2,7 +2,9 @@
 
 namespace App\Model;
 
+use App\Model\Calendar;
 use Illuminate\Database\Eloquent\Model;
+use App\Jobs\SynchronizeGoogleCalendars;
 
 class GoogleAccount extends Model
 {
@@ -23,6 +25,15 @@ class GoogleAccount extends Model
     public function calendars()
     {
         return $this->hasMany(Calendar::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($googleAccount) {
+            SynchronizeGoogleCalendars::dispatch($googleAccount);
+        });
     }
 
 }

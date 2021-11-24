@@ -11,10 +11,16 @@ class Congregation extends Model
         'name'
     ];
 
-    // public function coworkers()
-    // {
-    //     return $this->hasMany(Coworker::class);
-    // }
+    public function coworkers()
+    {
+        return $this->hasMany(Coworker::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
 
     use HasFactory;
 }

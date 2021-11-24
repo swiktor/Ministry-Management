@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGoogleAccountsTable extends Migration
+class CreateEventsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,21 @@ class CreateGoogleAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('google_accounts', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->onDelete('cascade')->constrained();
+            // Relationships.
+            $table->foreignId('calendar_id')->onDelete('cascade')->constrained();
 
+            // Data.
             $table->string('google_id');
             $table->string('name');
-            $table->json('token');
+            $table->text('description')->nullable();
+            $table->boolean('allday')->default(false);
 
+            // Timestamps.
+            $table->datetime('started_at');
+            $table->datetime('ended_at');
             $table->timestamps();
         });
     }
@@ -33,6 +39,6 @@ class CreateGoogleAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('google_accounts');
+        Schema::dropIfExists('events');
     }
 }

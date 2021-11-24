@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Google;
 use App\Model\GoogleAccount;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GoogleAccountController extends Controller
 {
@@ -15,6 +16,7 @@ class GoogleAccountController extends Controller
 
     public function index()
     {
+        // dd(Auth::user()->goals->name);
         return view('google.accounts', [
             'accounts' => auth()->user()->googleAccounts,
         ]);
@@ -35,7 +37,7 @@ class GoogleAccountController extends Controller
             ],
             [
                 'name' => $account->email,
-                'token' => trim(($google->getAccessToken())["access_token"], '"'),
+                'token' => $google->getAccessToken(),
             ]
         );
 
