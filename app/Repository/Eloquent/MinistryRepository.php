@@ -7,8 +7,8 @@ namespace App\Repository\Eloquent;
 use App\Model\Type;
 use App\Model\Report;
 use App\Model\Ministry;
+use App\Services\Google;
 use Illuminate\Support\Carbon;
-use Spatie\GoogleCalendar\Event;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -144,15 +144,26 @@ class MinistryRepository implements MinistryRepositoryInterface
         $startDateTime = new Carbon($ministry->when->toDateTimeString(), 'Europe/Warsaw');
         $endDateTime = new Carbon($ministry_end_time, 'Europe/Warsaw');
 
-        $event = Event::create(
-            [
-                'name' => $coworkers,
-                'description' => $type_name,
-                'startDateTime' => $startDateTime,
-                'endDateTime' => $endDateTime
-            ],
-            Auth::user()->googleAccounts[0]->name
-        );
+        $google =
+        app(Google::class)
+        ->connectUsing(Auth::user()->googleAccounts[0]->token)
+        ->service('Calendar');
+
+        $event = new \Google_Service_Calendar_Event(array(
+            'summary' => $coworkers,
+            'description' => $type_name,
+            'start' => array(
+                'dateTime' => $startDateTime,
+                'timeZone' => 'Europe/Warsaw',
+            ),
+            'end' => array(
+                'dateTime' => $endDateTime,
+                'timeZone' => 'Europe/Warsaw',
+            ),
+
+        ));
+
+        $event = $google->events->insert(Auth::user()->googleAccounts[0]->name, $event);
 
         $ministry = Ministry::find($ministry_id);
         $ministry->event_id = $event->id;
@@ -161,9 +172,13 @@ class MinistryRepository implements MinistryRepositoryInterface
 
     public function deleteFromGoogleCalendar($ministry_id)
     {
+        $google =
+        app(Google::class)
+        ->connectUsing(Auth::user()->googleAccounts[0]->token)
+        ->service('Calendar');
+
         $ministry = Ministry::find($ministry_id);
-        $event = Event::find($ministry->event_id, Auth::user()->googleAccounts[0]->name);
-        $event->delete();
+        $google->events->delete(Auth::user()->googleAccounts[0]->name, $ministry->event_id);
         return 1;
     }
 

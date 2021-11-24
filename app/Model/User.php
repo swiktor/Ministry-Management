@@ -69,14 +69,4 @@ class User extends Authenticatable
             });
     }
 
-    public function events()
-    {
-        return Event::whereHas('calendar', function ($calendarQuery) {
-            $calendarQuery->whereHas('googleAccount', function ($accountQuery) {
-                $accountQuery->whereHas('user', function ($userQuery) {
-                    $userQuery->where('id', $this->id);
-                });
-            });
-        });
-    }
 }

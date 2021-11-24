@@ -16,7 +16,10 @@ class GoogleAccountController extends Controller
 
     public function index()
     {
-        // dd(Auth::user()->goals->name);
+        // $googleAccount = auth()->user()->googleAccounts[0];
+
+        // dd($googleAccount);
+
         return view('google.accounts', [
             'accounts' => auth()->user()->googleAccounts,
         ]);
@@ -46,6 +49,7 @@ class GoogleAccountController extends Controller
 
     public function destroy(GoogleAccount $googleAccount, Google $google)
     {
+        $googleAccount->calendars()->delete();
         $googleAccount->delete();
 
         $google->revokeToken($googleAccount->token);
