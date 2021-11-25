@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Calendar;
 use App\Services\Google;
 use App\Model\GoogleAccount;
 use Illuminate\Http\Request;
@@ -16,12 +17,15 @@ class GoogleAccountController extends Controller
 
     public function index()
     {
-        // $googleAccount = auth()->user()->googleAccounts[0];
-
-        // dd($googleAccount);
+        $calendars = null;
+        $accounts = auth()->user()->googleAccounts;
+        if (!$accounts->isEmpty()) {
+            $calendars = auth()->user()->googleAccounts[0]->calendars()->get();
+        }
 
         return view('google.accounts', [
-            'accounts' => auth()->user()->googleAccounts,
+            'accounts' => $accounts,
+            'calendars' => $calendars
         ]);
     }
 
@@ -44,16 +48,35 @@ class GoogleAccountController extends Controller
             ]
         );
 
+        $calendar = Calendar::where('google_id','=', $account->email)->firstOrFail();
+
+        $user = Auth::user();
+        $user->calendar_id = $calendar->id;
+        $user->save();
+
         return redirect()->route('google.index');
     }
 
     public function destroy(GoogleAccount $googleAccount, Google $google)
     {
+        $user = Auth::user();
+        $user->calendar_id = null;
+        $user->save();
+
         $googleAccount->calendars()->delete();
         $googleAccount->delete();
 
         $google->revokeToken($googleAccount->token);
 
         return redirect()->back();
+    }
+
+    public function select(Calendar $googleCalendar)
+    {
+        $user = Auth::user();
+        $user->calendar_id = $googleCalendar->id;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Pomyślnie ustawiono kalendarz');
     }
 }

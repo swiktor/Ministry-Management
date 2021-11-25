@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository\Eloquent;
 
+use App\Model\Calendar as ModelCalendar;
 use App\Model\Type;
 use App\Model\Report;
 use App\Model\Ministry;
@@ -13,6 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\MinistryRepository as MinistryRepositoryInterface;
+use Google\Service\Calendar\Calendar;
 
 class MinistryRepository implements MinistryRepositoryInterface
 {
@@ -145,9 +147,9 @@ class MinistryRepository implements MinistryRepositoryInterface
         $endDateTime = new Carbon($ministry_end_time, 'Europe/Warsaw');
 
         $google =
-        app(Google::class)
-        ->connectUsing(Auth::user()->googleAccounts[0]->token)
-        ->service('Calendar');
+            app(Google::class)
+            ->connectUsing(Auth::user()->googleAccounts[0]->token)
+            ->service('Calendar');
 
         $event = new \Google_Service_Calendar_Event(array(
             'summary' => $coworkers,
@@ -163,7 +165,9 @@ class MinistryRepository implements MinistryRepositoryInterface
 
         ));
 
-        $event = $google->events->insert(Auth::user()->googleAccounts[0]->name, $event);
+        $calendar = ModelCalendar::find(auth()->user()->calendar_id);
+
+        $event = $google->events->insert($calendar->google_id, $event);
 
         $ministry = Ministry::find($ministry_id);
         $ministry->event_id = $event->id;
@@ -173,12 +177,14 @@ class MinistryRepository implements MinistryRepositoryInterface
     public function deleteFromGoogleCalendar($ministry_id)
     {
         $google =
-        app(Google::class)
-        ->connectUsing(Auth::user()->googleAccounts[0]->token)
-        ->service('Calendar');
+            app(Google::class)
+            ->connectUsing(Auth::user()->googleAccounts[0]->token)
+            ->service('Calendar');
 
         $ministry = Ministry::find($ministry_id);
-        $google->events->delete(Auth::user()->googleAccounts[0]->name, $ministry->event_id);
+        $calendar = ModelCalendar::find(auth()->user()->calendar_id);
+
+        $google->events->delete($calendar->google_id, $ministry->event_id);
         return 1;
     }
 

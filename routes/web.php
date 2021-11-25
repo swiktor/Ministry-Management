@@ -129,6 +129,8 @@ Route::middleware(['auth'])->group(
                 ->name('store');
                 Route::delete('{googleAccount}', 'GoogleAccountController@destroy')
                 ->name('destroy');
+                Route::post('{googleCalendar}', 'GoogleAccountController@select')
+                ->name('select');
             }
         );
     }
