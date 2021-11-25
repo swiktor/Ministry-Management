@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Model\User;
+use App\Mail\WelcomeMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use App\Repository\CongregationRepository;
@@ -70,7 +72,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'surname' => $data['surname'],
             'email' => $data['email'],
@@ -78,6 +80,10 @@ class RegisterController extends Controller
             'goal_id' => '1',
             'congregation_id' => $data['congregation'],
         ]);
+
+        // Mail::to($data['email'])->send(new WelcomeMail($user));
+
+        return $user;
     }
 
     public function showRegistrationForm()
