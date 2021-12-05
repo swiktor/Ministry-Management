@@ -24,15 +24,13 @@ class AddCongregation extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|alpha_dash|min:3',
+            'name' => 'required|min:3',
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Pole wymagane',
-            'name.alpha_dash' => 'Możesz wpisać tylko litery i myślnik',
             'name.required' => 'Pole wymagane',
         ];
     }

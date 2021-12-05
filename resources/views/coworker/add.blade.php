@@ -49,6 +49,7 @@
                                 <div class="col-md-6">
                                     <select class="selectpicker form-control @error('congregation') is-invalid @enderror"
                                         name="congregation" data-live-search="true" required>
+                                        <option value="" disabled selected>Kliknij, żeby wybrać z listy</option>
                                         @foreach ($congregations as $congregation)
                                             <option value={{ $congregation->id }}>
                                                 {{ $congregation->name }}

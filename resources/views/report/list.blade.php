@@ -21,7 +21,7 @@
                     </form>
                 @endif
                 <div class="table-responsive">
-                    <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered text-center table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="align-middle">Lp</th>
