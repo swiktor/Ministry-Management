@@ -33,3 +33,11 @@
                     href="{{ route('google.index') }}">tutaj</a> </strong>
         </div>
     @endif
+
+    @if (auth()->user()->coworker_id == null)
+        <div class="alert alert-danger alert-block mt-2">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>Nie połączono jeszcze konta, żeby to zrobić kliknij <a
+                    href="{{ route('coworker.link.form') }}">tutaj</a> </strong>
+        </div>
+    @endif

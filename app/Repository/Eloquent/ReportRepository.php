@@ -89,5 +89,7 @@ class ReportRepository implements ReportRepositoryInterface
         $report = new Report();
         $report->ministry_id = $ministry_id;
         $report->save();
+
+        return $report->id;
     }
 }

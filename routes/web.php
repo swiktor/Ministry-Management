@@ -70,6 +70,12 @@ Route::middleware(['auth'])->group(
             Route::post('add', 'CoworkerController@add')
                 ->name('add');
 
+            Route::get('link/form', 'CoworkerController@linkForm')
+                ->name('link.form');
+
+            Route::post('link', 'CoworkerController@link')
+                ->name('link');
+
             Route::get('list/{id}', 'MinistryController@listForCoworker')
                 ->where(['id' => '[0-9]+'])
                 ->name('ministry.list');
@@ -124,13 +130,13 @@ Route::middleware(['auth'])->group(
             ],
             function () {
                 Route::get('index', 'GoogleAccountController@index')
-                ->name('index');
+                    ->name('index');
                 Route::get('oauth', 'GoogleAccountController@store')
-                ->name('store');
+                    ->name('store');
                 Route::delete('{googleAccount}', 'GoogleAccountController@destroy')
-                ->name('destroy');
+                    ->name('destroy');
                 Route::post('{googleCalendar}', 'GoogleAccountController@select')
-                ->name('select');
+                    ->name('select');
             }
         );
     }

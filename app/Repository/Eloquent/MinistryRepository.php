@@ -115,7 +115,7 @@ class MinistryRepository implements MinistryRepositoryInterface
         $ministry = new Ministry();
         $ministry->type_id = $data['type'];
         $ministry->when = $data['when'];
-        $ministry->user_id = Auth::id();
+        $ministry->user_id = $data['user_id'];
         $ministry->save();
 
         return $ministry->id;

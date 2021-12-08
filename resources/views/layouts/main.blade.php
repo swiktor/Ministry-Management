@@ -46,8 +46,11 @@
                         <a class="dropdown-item" href="{{ route('google.index') }}">
                             Ustawienia Google
                         </a>
+                        <a class="dropdown-item" href="{{ route('coworker.link.form') }}">
+                            Połącz konto
+                        </a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
+                                                             document.getElementById('logout-form').submit();">
                             {{ __('main.Logout') }}
                         </a>
 
@@ -105,10 +108,10 @@
     @endauth
     <script src="{{ mix('/js/app.js') }}"></script>
     <script>
-    $(function() {
-        var reflowEvents = $("#dataTable").reflowTable({});
-    });
-</script>
+        $(function() {
+            var reflowEvents = $("#dataTable").reflowTable({});
+        });
+    </script>
 </body>
 
 </html>

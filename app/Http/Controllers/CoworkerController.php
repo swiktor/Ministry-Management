@@ -47,6 +47,14 @@ class CoworkerController extends Controller
         ]);
     }
 
+    public function addForm()
+    {
+        $congregations = $this->congregationRepository->all();
+        return view('coworker.add', [
+            'congregations' => $congregations
+        ]);
+    }
+
     public function add(AddCoworker $request)
     {
         $data = $request->validated();
@@ -58,11 +66,30 @@ class CoworkerController extends Controller
             ->with('success', 'Dodano nowego współpracownika');
     }
 
-    public function addForm()
+    public function linkForm()
     {
-        $congregations = $this->congregationRepository->all();
-        return view('coworker.add', [
-            'congregations' => $congregations
+        $user_coworker_id = 0;
+
+        if (Auth::user()->coworker_id != null)
+        {
+            $user_coworker_id = Auth::user()->coworker_id;
+        }
+
+        $coworkers = $this->coworkerRepository->allActive();
+        return view('coworker.link', [
+            'coworkers' => $coworkers,
+            'user_coworker_id' => $user_coworker_id,
         ]);
+    }
+
+    public function link(Request $request)
+    {
+        $user = Auth::user();
+        $user->coworker_id = $request->get('coworker');
+        $user->save();
+
+        return redirect()
+            ->route('dashboard.ministry')
+            ->with('success', 'Pomyślnie połączono konto');
     }
 }

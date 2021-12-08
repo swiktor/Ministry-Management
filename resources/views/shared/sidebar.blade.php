@@ -41,6 +41,10 @@
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Ci co nigdy
     </a>
+    <a class="nav-link" href="{{ route('coworker.add.form') }}">
+        <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
+        Dodaj
+    </a>
 </nav>
 
 <div class="sb-sidenav-menu-heading">Sprawozdania</div>
@@ -64,8 +68,4 @@
 <a class="nav-link" href="{{ route('congregation.add.form') }}">
     <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
     Dodaj zbór
-</a>
-<a class="nav-link" href="{{ route('coworker.add.form') }}">
-    <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-    Dodaj współpracownika
 </a>

@@ -66,6 +66,8 @@ class MinistryController extends Controller
     {
         $data = $request->validated();
 
+        $data['user_id'] = Auth::id();
+
         $ministry_id = $this->ministryRepository->add($data);
 
         $this->coworkerRepository->addToMinistry($data['coworker'], $ministry_id);
