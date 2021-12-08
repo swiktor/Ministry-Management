@@ -55,7 +55,7 @@ class DashboardRepository implements DashboardRepositoryInterface
         ->paginate($limit);
     }
 
-    public function monthSum($month, $year)
+    public function monthSum($month, $year, $user_id)
     {
         $monthSum =  DB::table('reports')
             ->select(
@@ -77,7 +77,7 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->join('types', 'ministries.type_id', '=', 'types.id')
             ->join('users', 'ministries.user_id', '=', 'users.id')
             ->join('goals', 'users.goal_id', '=', 'goals.id')
-            ->where('ministries.user_id', Auth::id())
+            ->where('ministries.user_id', $user_id)
             ->whereRaw("reports.ministry_id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
             ->get();
 

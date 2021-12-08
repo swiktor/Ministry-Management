@@ -33,7 +33,7 @@ class DashboardController extends Controller
             $when = $year . '-' . $month;
         }
 
-        $monthSum = $this->dashboardRepository->monthSum($month, $year);
+        $monthSum = $this->dashboardRepository->monthSum($month, $year, Auth::id());
         $goals = $this->goalRepository->all();
         $goal_id = Auth::user()->goal_id;
 

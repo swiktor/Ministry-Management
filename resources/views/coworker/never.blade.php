@@ -13,16 +13,14 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Lp</th>
-                                <th class="text-center">Nazwisko</th>
-                                <th class="text-center">Imię</th>
+                                <th class="text-center">Imię i nazwisko</th>
                                 <th class="text-center">Opcje</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th class="text-center">Lp</th>
-                                <th class="text-center">Nazwisko</th>
-                                <th class="text-center">Imię</th>
+                                <th class="text-center">Imię i nazwisko</th>
                                 <th class="text-center">Opcje</th>
                             </tr>
                         </tfoot>
@@ -31,8 +29,7 @@
                                 <tr>
                                     {{-- @dd($coworker) --}}
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td class="text-center">{{ $coworker->surname }}</td>
-                                    <td class="text-center">{{ $coworker->name }}</td>
+                                    <td class="text-center">{{ $coworker->name }} {{ $coworker->surname }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('coworker.ministry.list', ['id' => $coworker->id]) }}">
                                             <button class="btn btn-info">Lista służb</button>

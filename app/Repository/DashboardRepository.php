@@ -6,7 +6,7 @@ namespace App\Repository;
 
 interface DashboardRepository
 {
-    public function monthSum($month, $year);
+    public function monthSum($month, $year, $user_id);
     public function incomingMinistries(int $limit);
     public function coworkersBalance($month, $year, $limit);
 }
