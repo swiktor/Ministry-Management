@@ -61,7 +61,7 @@ class MinistryRepository implements MinistryRepositoryInterface
             }])
             ->where('user_id', Auth::id())
             ->whereRaw("id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
-            ->orderBy('when', 'asc')
+            ->orderBy('when', 'desc')
             ->paginate($limit);
     }
 
@@ -121,7 +121,7 @@ class MinistryRepository implements MinistryRepositoryInterface
         return $ministry->id;
     }
 
-    public function setInGoogleCalendar($ministry_id)
+    public function setInGoogleCalendar($ministry_id, $user)
     {
         $ministry = $this->get($ministry_id)[0];
 
@@ -148,7 +148,7 @@ class MinistryRepository implements MinistryRepositoryInterface
 
         $google =
             app(Google::class)
-            ->connectUsing(Auth::user()->googleAccounts[0]->token)
+            ->connectUsing($user->googleAccounts[0]->token)
             ->service('Calendar');
 
         $event = new \Google_Service_Calendar_Event(array(
@@ -165,7 +165,7 @@ class MinistryRepository implements MinistryRepositoryInterface
 
         ));
 
-        $calendar = ModelCalendar::find(auth()->user()->calendar_id);
+        $calendar = ModelCalendar::find($user->calendar_id);
 
         $event = $google->events->insert($calendar->google_id, $event);
 

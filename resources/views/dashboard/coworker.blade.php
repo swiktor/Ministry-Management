@@ -24,8 +24,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Lp</th>
-                                <th class="text-center">Nazwisko</th>
-                                <th class="text-center">Imię</th>
+                                <th class="text-center">Imię i nazwisko</th>
                                 <th class="text-center">Ilość wyruszeń</th>
                                 <th class="text-center">Opcje</th>
                             </tr>
@@ -33,8 +32,7 @@
                         <tfoot>
                             <tr>
                                 <th class="text-center">Lp</th>
-                                <th class="text-center">Nazwisko</th>
-                                <th class="text-center">Imię</th>
+                                <th class="text-center">Imię i nazwisko</th>
                                 <th class="text-center">Ilość wyruszeń</th>
                                 <th class="text-center">Opcje</th>
                             </tr>
@@ -43,8 +41,7 @@
                             @foreach ($coworkers ?? [] as $coworker)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td class="text-center">{{ $coworker->surname }}</td>
-                                    <td class="text-center">{{ $coworker->name }}</td>
+                                    <td class="text-center">{{ $coworker->name }} {{ $coworker->surname }}</td>
                                     <td class="text-center">{{ $coworker->count }}</td>
                                     <td class="text-center">
                                         <a

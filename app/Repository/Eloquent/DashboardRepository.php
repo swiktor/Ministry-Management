@@ -34,7 +34,7 @@ class DashboardRepository implements DashboardRepositoryInterface
             }])
             ->where('user_id', Auth::id())
             ->whereRaw("datediff(ministries.when, CURRENT_TIMESTAMP) >=0 ")
-            ->orderBy('when', 'asc')
+            ->orderBy('when', 'desc')
             ->paginate($limit);
     }
 

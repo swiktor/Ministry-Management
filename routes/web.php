@@ -85,9 +85,6 @@ Route::middleware(['auth'])->group(
             'prefix' => 'report',
             'as' => 'report.'
         ], function () {
-            Route::get('list', 'ReportController@list')
-                ->name('list');
-
             Route::get('edit/form/{id}', 'ReportController@editForm')
                 ->name('edit.form');
 

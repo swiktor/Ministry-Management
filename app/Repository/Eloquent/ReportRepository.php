@@ -62,7 +62,7 @@ class ReportRepository implements ReportRepositoryInterface
             ->with('reports')
             ->where('user_id', Auth::id())
             ->whereRaw("id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
-            ->orderBy('when', 'asc')
+            ->orderBy('when', 'desc')
             ->paginate($limit);
     }
 
@@ -73,13 +73,13 @@ class ReportRepository implements ReportRepositoryInterface
 
     public function edit($data)
     {
-        $report = $this-> reportModel->find($data['id']);
+        $report = $this->reportModel->find($data['id']);
 
-        $report->hours = $data['hours'];
-        $report->placements = $data['placements'];
-        $report->videos = $data['videos'];
-        $report->returns = $data['returns'];
-        $report->studies = $data['studies'];
+        $report->hours = $data['hours'] ?? "00:00";
+        $report->placements = $data['placements'] ?? 0;
+        $report->videos = $data['videos'] ?? 0;
+        $report->returns = $data['returns'] ?? 00;
+        $report->studies = $data['studies'] ?? 0;
 
         $report->save();
     }
