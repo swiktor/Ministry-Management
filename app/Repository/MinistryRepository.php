@@ -23,7 +23,7 @@ interface MinistryRepository
 
     public function add($data);
 
-    public function setInGoogleCalendar($ministry_id);
+    public function setInGoogleCalendar($ministry_id, $user);
 
     public function deleteFromGoogleCalendar($ministry_id);
 

@@ -74,7 +74,7 @@ class MinistryController extends Controller
 
         $this->reportRepository->add($ministry_id);
 
-        $this->ministryRepository->setInGoogleCalendar($ministry_id);
+        $this->ministryRepository->setInGoogleCalendar($ministry_id, Auth::user());
 
         return redirect()
             ->route('ministry.list')
@@ -123,7 +123,7 @@ class MinistryController extends Controller
             $isEdited = $this->ministryRepository->edit($ministry_form);
             if ($isEdited) {
                 $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
-                $this->ministryRepository->setInGoogleCalendar($ministry_form['id']);
+                $this->ministryRepository->setInGoogleCalendar($ministry_form['id'], Auth::user());
                 return redirect()
                     ->route('ministry.list')
                     ->with('success', 'Pomyślnie edytowano służbę');

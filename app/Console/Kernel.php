@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new SendReportMail())->lastDayOfMonth('22:00')->timezone('Europe/Warsaw');
+        // $schedule->job(new SendReportMail())->lastDayOfMonth('22:00')->timezone('Europe/Warsaw');
+        $schedule->job(new SendReportMail())->timezone('Europe/Warsaw');
     }
 
     /**
