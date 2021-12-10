@@ -79,7 +79,7 @@
                                                 <button class="btn btn-warning">Edytuj</button>
                                             </a>
                                             <a href="{{ route('ministry.delete', ['id' => $ministry->id]) }}">
-                                                <button class="btn btn-danger">Usuń</button>
+                                                <button onclick="return confirm('Czy na pewno chcesz usunąć tę służbę?')" class="btn btn-danger">Usuń</button>
                                             </a>
                                         @endif
                                     </td>
