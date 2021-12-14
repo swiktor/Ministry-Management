@@ -44,7 +44,7 @@ class MinistryController extends Controller
 
         $ministries = $this->ministryRepository->allPaginated($month, $year, 10);
 
-            return view('ministry.list', [
+        return view('ministry.list', [
             'ministries' => $ministries,
             'when' => $when,
         ]);
@@ -67,6 +67,7 @@ class MinistryController extends Controller
         $data = $request->validated();
 
         $data['user_id'] = Auth::id();
+        $data['status'] = 'accepted';
 
         $ministry_id = $this->ministryRepository->add($data);
 
@@ -75,6 +76,8 @@ class MinistryController extends Controller
         $this->reportRepository->add($ministry_id);
 
         $this->ministryRepository->setInGoogleCalendar($ministry_id, Auth::user());
+
+        $this->ministryRepository->ministryProposalForUser($data['coworker'], $ministry_id, $this->coworkerRepository, $this->reportRepository);
 
         return redirect()
             ->route('ministry.list')
@@ -148,5 +151,29 @@ class MinistryController extends Controller
                 ->route('ministry.list')
                 ->with('error', 'Nie udało się usunąć służby');
         }
+    }
+
+    public function proposal()
+    {
+        $proposalList = $this->ministryRepository->ministryProposalList(Auth::id(), 10);
+        return view('ministry.proposal', [
+            'ministries' => $proposalList,
+        ]);
+    }
+
+    public function proposalAccept(int $id)
+    {
+        $this->ministryRepository->ministryProposalAccept($id, $this->reportRepository);
+        return redirect()
+            ->route('ministry.list')
+            ->with('success', 'Pomyślnie zaakceptowano propozycję');
+    }
+
+    public function proposalReject(int $id)
+    {
+        $this->ministryRepository->ministryProposalReject($id);
+        return redirect()
+            ->route('ministry.proposal')
+            ->with('success', 'Pomyślnie odrzucono propozycję');
     }
 }

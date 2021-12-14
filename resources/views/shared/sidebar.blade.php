@@ -2,7 +2,7 @@
 <nav class="sb-sidenav-menu-nested">
     <a class="nav-link" href="{{ route('dashboard.ministry') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-        Służby
+        Nadchodzące służby
     </a>
 </nav>
 <nav class="sb-sidenav-menu-nested">
@@ -14,7 +14,7 @@
 <nav class="sb-sidenav-menu-nested">
     <a class="nav-link" href="{{ route('dashboard.report') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-        Sprawozdania
+        Sprawozdanie
     </a>
 </nav>
 <div class="sb-sidenav-menu-heading">Służby</div>
@@ -23,12 +23,17 @@
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Lista
     </a>
+    <a class="nav-link" href="{{ route('ministry.proposal') }}">
+        <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
+        Propozycje
+    </a>
     @if (!auth()->user()->googleAccounts->isEmpty())
         <a class="nav-link" href="{{ route('ministry.form.add') }}">
             <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
             Umów
         </a>
     @endif
+
 </nav>
 
 <div class="sb-sidenav-menu-heading">Współpracownicy</div>
@@ -53,11 +58,8 @@
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Lista
     </a>
-
+    <a class="nav-link" href="{{ route('congregation.add.form') }}">
+        <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
+        Dodaj
+    </a>
 </nav>
-
-<div class="sb-sidenav-menu-heading">Panel edytorski</div>
-<a class="nav-link" href="{{ route('congregation.add.form') }}">
-    <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
-    Dodaj zbór
-</a>

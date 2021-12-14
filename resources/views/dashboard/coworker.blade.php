@@ -38,9 +38,9 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach ($coworkers ?? [] as $coworker)
+                            @foreach ($coworkers ?? [] as $key => $coworker)
                                 <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $coworkers->firstItem() + $key }}</td>
                                     <td class="text-center">{{ $coworker->name }} {{ $coworker->surname }}</td>
                                     <td class="text-center">{{ $coworker->count }}</td>
                                     <td class="text-center">

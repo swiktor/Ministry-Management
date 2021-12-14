@@ -8,6 +8,7 @@ use App\Model\Report;
 use App\Model\Ministry;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\DashboardRepository as DashboardRepositoryInterface;
 
@@ -33,6 +34,7 @@ class DashboardRepository implements DashboardRepositoryInterface
                     ->orderBy('name');
             }])
             ->where('user_id', Auth::id())
+            ->where('status', 'accepted')
             ->whereRaw("datediff(ministries.when, CURRENT_TIMESTAMP) >=0 ")
             ->orderBy('when', 'desc')
             ->paginate($limit);
@@ -41,18 +43,19 @@ class DashboardRepository implements DashboardRepositoryInterface
     public function coworkersBalance($month, $year, $limit)
     {
         return DB::table('coworkers_ministries')
-        ->select(['coworkers_ministries.coworker_id','name','surname'])
-        ->selectRaw("count(coworkers_ministries.coworker_id) as count")
-        ->join('coworkers', 'coworkers_ministries.coworker_id', '=', 'coworkers.id')
-        ->join('ministries', 'coworkers_ministries.ministry_id', '=', 'ministries.id')
-        ->join('reports', 'reports.ministry_id','=', 'ministries.id')
-        ->where('ministries.user_id', Auth::id())
-        ->whereRaw("reports.ministry_id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
-        ->groupBy("coworkers_ministries.coworker_id")
-        ->orderBy('count', 'desc')
-        ->orderBy('surname','asc')
-        ->orderBy('name','asc')
-        ->paginate($limit);
+            ->select(['coworkers_ministries.coworker_id', 'name', 'surname'])
+            ->selectRaw("count(coworkers_ministries.coworker_id) as count")
+            ->join('coworkers', 'coworkers_ministries.coworker_id', '=', 'coworkers.id')
+            ->join('ministries', 'coworkers_ministries.ministry_id', '=', 'ministries.id')
+            ->join('reports', 'reports.ministry_id', '=', 'ministries.id')
+            ->where('ministries.user_id', Auth::id())
+            ->where('ministries.status', 'accepted')
+            ->whereRaw("reports.ministry_id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
+            ->groupBy("coworkers_ministries.coworker_id")
+            ->orderBy('count', 'desc')
+            ->orderBy('surname', 'asc')
+            ->orderBy('name', 'asc')
+            ->paginate($limit);
     }
 
     public function monthSum($month, $year, $user_id)
@@ -78,9 +81,26 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->join('users', 'ministries.user_id', '=', 'users.id')
             ->join('goals', 'users.goal_id', '=', 'goals.id')
             ->where('ministries.user_id', $user_id)
+            ->where('ministries.status', 'accepted')
             ->whereRaw("reports.ministry_id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
             ->get();
 
         return $monthSum;
+    }
+
+    public function ministryProposalUserList($user)
+    {
+        return $this->ministryModel
+            ->with(['coworkers' => function ($query) {
+                $query
+                    ->distinct()
+                    ->orderBy('surname')
+                    ->orderBy('name');
+            }])
+            ->with('users_original')
+            ->where('user_id', Auth::id())
+            ->where('status', 'waiting')
+            ->groupBy('user_id_original')
+            ->get();
     }
 }

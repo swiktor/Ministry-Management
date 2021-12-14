@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ministry extends Model
 {
     protected $fillable = [
-        'id', 'type_id', 'when', 'user_id', 'event_id'
+        'id', 'type_id', 'when', 'user_id', 'event_id', 'status', 'user_id_original'
     ];
 
     protected $dates = ['when'];
@@ -21,6 +21,11 @@ class Ministry extends Model
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function users_original()
+    {
+        return $this->belongsTo(User::class, 'user_id_original', 'id');
     }
 
     public function coworkers()

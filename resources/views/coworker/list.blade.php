@@ -53,10 +53,10 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach ($coworkers ?? [] as $coworker)
+                            @foreach ($coworkers ?? [] as $key => $coworker)
                                 <tr>
                                     {{-- @dd($coworker) --}}
-                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $coworkers->firstItem() + $key }}</td>
                                     <td class="text-center">{{ $coworker->name }} {{ $coworker->surname }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('coworker.ministry.list', ['id' => $coworker->id]) }}">

@@ -9,7 +9,7 @@
             <div class="card-header"><i class="fas fa-table mr-1"></i>Współpracownicy</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="text-center">Lp</th>
@@ -25,10 +25,9 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach ($coworkers ?? [] as $coworker)
+                            @foreach ($coworkers ?? [] as $key => $coworker)
                                 <tr>
-                                    {{-- @dd($coworker) --}}
-                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $coworkers->firstItem() + $key }}</td>
                                     <td class="text-center">{{ $coworker->name }} {{ $coworker->surname }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('coworker.ministry.list', ['id' => $coworker->id]) }}">

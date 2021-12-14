@@ -9,7 +9,8 @@
             <div class="card-header"><i class="fas fa-table mr-1"></i>Lista zborów</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped text-center" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-striped text-center" id="dataTable" width="100%"
+                        cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="align-middle">Lp</th>
@@ -25,13 +26,12 @@
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach ($congregations ?? [] as $congregation)
+                            @foreach ($congregations ?? [] as $key => $congregation)
                                 <tr>
-                                    <td class="align-middle">{{ $loop->iteration }}</td>
-                                    <td class="align-middle">{{ $congregation->name}}
+                                    <td class="align-middle">{{ $congregations->firstItem() + $key }}</td>
+                                    <td class="align-middle">{{ $congregation->name }}
                                     <td class="align-middle">
-                                        <a
-                                            href="{{ route('coworker.list', ['congregation' => $congregation->id]) }}">
+                                        <a href="{{ route('coworker.list', ['congregation' => $congregation->id]) }}">
                                             <button class="btn btn-info">Osoby ze zboru</button>
                                         </a>
                                     </td>

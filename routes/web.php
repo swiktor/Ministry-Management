@@ -52,6 +52,15 @@ Route::middleware(['auth'])->group(
 
             Route::get('delete/{id}', 'MinistryController@delete')
                 ->name('delete');
+
+            Route::get('proposal', 'MinistryController@proposal')
+                ->name('proposal');
+
+            Route::get('proposal/accept/{id}', 'MinistryController@proposalAccept')
+            ->name('proposal.accept');
+
+            Route::get('proposal/reject/{id}', 'MinistryController@proposalReject')
+            ->name('proposal.reject');
         });
 
         Route::group([

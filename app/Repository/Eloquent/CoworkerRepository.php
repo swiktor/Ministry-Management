@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Repository\Eloquent;
 
 use App\Model\Coworker;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\User;
 use App\Repository\CoworkerRepository as CoworkerRepositoryInterface;
 
 
@@ -100,7 +102,9 @@ class CoworkerRepository implements CoworkerRepositoryInterface
         foreach ($coworkers ?? [] as $coworker) {
             DB::table('coworkers_ministries')->insert([
                 'coworker_id' => $coworker,
-                'ministry_id' => $ministry_id
+                'ministry_id' => $ministry_id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }

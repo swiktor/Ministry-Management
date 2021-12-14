@@ -41,3 +41,22 @@
                     href="{{ route('coworker.link.form') }}">tutaj</a> </strong>
         </div>
     @endif
+
+
+    @if (isset($ministryProposalUserList) && !count($ministryProposalUserList) == 0)
+        <div class="alert alert-info alert-block mt-2">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>
+                @if (count($ministryProposalUserList) == 1)
+                    Użytkownik {{ $ministryProposalUserList[0]->users_original->name }} {{ $ministryProposalUserList[0]->users_original->surname }}
+                    dodał służbę z Tobą, możesz ją sprawdzić <a href="{{ route('ministry.proposal') }}">tutaj</a>
+                @else
+                    Użytkownicy
+                    @foreach ($ministryProposalUserList as $proposal)
+                        {{ $proposal->users_original->name }} {{ $proposal->users_original->surname }}@if (!$loop->last),@endif
+                    @endforeach
+                    dodali slużbę z Tobą, możesz ją sprawdzić <a href="{{ route('ministry.proposal') }}">tutaj</a>
+                @endif
+            </strong>
+        </div>
+    @endif

@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Repository\Eloquent;
 
-use App\Model\Calendar as ModelCalendar;
 use App\Model\Type;
 use App\Model\Report;
 use App\Model\Ministry;
 use App\Services\Google;
+use App\Model\User as modelUser;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
-use App\Repository\MinistryRepository as MinistryRepositoryInterface;
 use Google\Service\Calendar\Calendar;
+use App\Model\Calendar as ModelCalendar;
+use App\Repository\MinistryRepository as MinistryRepositoryInterface;
 
 class MinistryRepository implements MinistryRepositoryInterface
 {
@@ -45,6 +47,7 @@ class MinistryRepository implements MinistryRepositoryInterface
                     ->orderBy('name');
             }])
             ->where('user_id', Auth::id())
+            ->where('status', 'accepted')
             ->orderBy('when', 'desc')
             ->get();
     }
@@ -59,7 +62,9 @@ class MinistryRepository implements MinistryRepositoryInterface
                     ->orderBy('surname')
                     ->orderBy('name');
             }])
+            ->with('reports')
             ->where('user_id', Auth::id())
+            ->where('status', 'accepted')
             ->whereRaw("id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
             ->orderBy('when', 'desc')
             ->paginate($limit);
@@ -84,6 +89,7 @@ class MinistryRepository implements MinistryRepositoryInterface
                     ->orderBy('name');
             }])
             ->where('user_id', Auth::id())
+            ->where('status', 'accepted')
             ->orderBy('when', 'desc')
             ->get();
     }
@@ -105,6 +111,7 @@ class MinistryRepository implements MinistryRepositoryInterface
                     ->orderBy('name');
             }])
             ->where('user_id', Auth::id())
+            ->where('status', 'accepted')
             ->whereIn('id', $ministry_ids)
             ->orderBy('when', 'desc')
             ->paginate($limit);
@@ -116,6 +123,7 @@ class MinistryRepository implements MinistryRepositoryInterface
         $ministry->type_id = $data['type'];
         $ministry->when = $data['when'];
         $ministry->user_id = $data['user_id'];
+        $ministry->status = $data['status'];
         $ministry->save();
 
         return $ministry->id;
@@ -173,6 +181,8 @@ class MinistryRepository implements MinistryRepositoryInterface
         $ministry->event_id = $event->id;
         $ministry->save();
     }
+
+
 
     public function deleteFromGoogleCalendar($ministry_id)
     {
@@ -264,28 +274,87 @@ class MinistryRepository implements MinistryRepositoryInterface
 
     public function delete(int $ministry_id)
     {
-        $ministry_db =
-            $this->ministryModel
-            ->with('coworkers')
-            ->where('id', $ministry_id)
-            ->get();
+        $ministry = Ministry::find($ministry_id);
+        $ministry->status = 'rejected';
+        $ministry->event_id = null;
 
-        $ministry_db = $ministry_db[0];
-
-        $coworkers_id_db = [];
-
-        foreach ($ministry_db['coworkers'] as $coworker) {
-            array_push($coworkers_id_db, $coworker['id']);
-        }
-
-        if (($this->deleteCoworkersFromMinistry($ministry_db, $coworkers_id_db))
-            && ($this->deleteFromGoogleCalendar($ministry_id))
-            && (Report::where('ministry_id', '=', [$ministry_id])->delete())
-            && (Ministry::find($ministry_id)->delete())
-        ) {
+        if ($ministry->save()) {
             return 1;
         } else {
             return 0;
         }
+    }
+
+    public function ministryProposalForUser($coworkers, $ministry_id, $coworkerRepository)
+    {
+        $all_users_coworker_id = [];
+        foreach (User::all() as $user) {
+            array_push($all_users_coworker_id, strval($user->coworker_id));
+        }
+
+        $users_in_ministry = array_intersect($coworkers, $all_users_coworker_id);
+        $ministry_orginal = Ministry::find($ministry_id);
+
+        foreach ($users_in_ministry as $user_in_ministry) {
+            $ministry_new = $ministry_orginal->replicate([
+                'event_id',
+            ])->fill([
+                'status' => 'waiting',
+                'user_id' => User::where('coworker_id', $user_in_ministry)->first()->id,
+                'user_id_original' => $ministry_orginal->user_id,
+            ]);
+            $ministry_new->save();
+            $ministry_new_id = $ministry_new->id;
+
+            $coworkers_id = DB::table('coworkers_ministries')
+                ->where('ministry_id', '=', $ministry_orginal->id)
+                ->pluck('coworker_id');
+
+            $coworkers_id_new = array();
+
+            foreach ($coworkers_id as $coworker_id) {
+                if ($coworker_id == $user_in_ministry) {
+                    array_push($coworkers_id_new, Auth::user()->coworker_id);
+                } else {
+                    array_push($coworkers_id_new, $coworker_id);
+                }
+            }
+
+            $coworkerRepository->addToMinistry($coworkers_id_new, $ministry_new_id);
+        }
+    }
+
+    public function ministryProposalList($user_id, $limit)
+    {
+        return $this->ministryModel
+            ->with('types')
+            ->with(['coworkers' => function ($query) {
+                $query
+                    ->distinct()
+                    ->orderBy('surname')
+                    ->orderBy('name');
+            }])
+            ->with('reports')
+            ->where('user_id', Auth::id())
+            ->where('status', 'waiting')
+            ->orderBy('when', 'desc')
+            ->paginate($limit);
+    }
+
+    public function ministryProposalAccept($ministry_id, $reportRepository)
+    {
+        $ministry = Ministry::find($ministry_id);
+        $ministry->status = 'accepted';
+        $ministry->save();
+
+        $reportRepository->add($ministry_id);
+        $this->setInGoogleCalendar($ministry_id, Auth::user());
+    }
+
+    public function ministryProposalReject($ministry_id)
+    {
+        $ministry = Ministry::find($ministry_id);
+        $ministry->status = 'rejected';
+        $ministry->save();
     }
 }
