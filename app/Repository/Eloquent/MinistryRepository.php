@@ -8,13 +8,17 @@ use App\Model\Type;
 use App\Model\Report;
 use App\Model\Ministry;
 use App\Services\Google;
-use App\Model\User as modelUser;
+use App\Mail\MinistryProposal;
 use Illuminate\Support\Carbon;
+use App\Model\User as modelUser;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Google\Service\Calendar\Calendar;
+
+use function PHPUnit\Framework\isNull;
 use App\Model\Calendar as ModelCalendar;
 use App\Repository\MinistryRepository as MinistryRepositoryInterface;
 
@@ -170,7 +174,6 @@ class MinistryRepository implements MinistryRepositoryInterface
                 'dateTime' => $endDateTime,
                 'timeZone' => 'Europe/Warsaw',
             ),
-
         ));
 
         $calendar = ModelCalendar::find($user->calendar_id);
@@ -182,8 +185,6 @@ class MinistryRepository implements MinistryRepositoryInterface
         $ministry->save();
     }
 
-
-
     public function deleteFromGoogleCalendar($ministry_id)
     {
         $google =
@@ -194,7 +195,9 @@ class MinistryRepository implements MinistryRepositoryInterface
         $ministry = Ministry::find($ministry_id);
         $calendar = ModelCalendar::find(auth()->user()->calendar_id);
 
-        $google->events->delete($calendar->google_id, $ministry->event_id);
+        if (!is_null($ministry->event_id) && !empty($ministry->event_id)) {
+            $google->events->delete($calendar->google_id, $ministry->event_id);
+        }
         return 1;
     }
 
@@ -274,16 +277,31 @@ class MinistryRepository implements MinistryRepositoryInterface
 
     public function delete(int $ministry_id)
     {
+        $statusGC = $this->deleteFromGoogleCalendar($ministry_id);
+
         $ministry = Ministry::find($ministry_id);
         $ministry->status = 'rejected';
         $ministry->event_id = null;
 
-        if ($ministry->save()) {
+        if ($ministry->save() && $statusGC) {
             return 1;
         } else {
             return 0;
         }
     }
+
+    public function usersInMinistry($coworkers)
+    {
+        $all_users_coworker_id = [];
+        foreach (User::all() as $user) {
+            array_push($all_users_coworker_id, strval($user->coworker_id));
+        }
+
+        $users_in_ministry = array_intersect($coworkers, $all_users_coworker_id);
+        return $users_in_ministry;
+    }
+
+
 
     public function ministryProposalForUser($coworkers, $ministry_id, $coworkerRepository)
     {
@@ -292,15 +310,16 @@ class MinistryRepository implements MinistryRepositoryInterface
             array_push($all_users_coworker_id, strval($user->coworker_id));
         }
 
-        $users_in_ministry = array_intersect($coworkers, $all_users_coworker_id);
+        $users_in_ministry = $this->usersInMinistry($coworkers);
         $ministry_orginal = Ministry::find($ministry_id);
 
         foreach ($users_in_ministry as $user_in_ministry) {
+            $user = User::where('coworker_id', $user_in_ministry)->first();
             $ministry_new = $ministry_orginal->replicate([
                 'event_id',
             ])->fill([
                 'status' => 'waiting',
-                'user_id' => User::where('coworker_id', $user_in_ministry)->first()->id,
+                'user_id' => $user->id,
                 'user_id_original' => $ministry_orginal->user_id,
             ]);
             $ministry_new->save();
@@ -321,6 +340,9 @@ class MinistryRepository implements MinistryRepositoryInterface
             }
 
             $coworkerRepository->addToMinistry($coworkers_id_new, $ministry_new_id);
+
+            Mail::to($user['email'])->send(new MinistryProposal($user, $ministry_new));
+
         }
     }
 
