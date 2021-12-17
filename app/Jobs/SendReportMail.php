@@ -6,6 +6,7 @@ use App\Model\User;
 use App\Mail\ReportMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use App\Repository\DashboardRepository;
@@ -44,39 +45,43 @@ class SendReportMail implements ShouldQueue
         $date['month'] = Carbon::now()->month;
         $date['year'] = Carbon::now()->year;
 
-        // $users = User::all();
+        $users = User::all();
 
-        // foreach ($users as $user) {
-        //     $report = $dashboardRepository->monthSum($date['month'], $date['year'], $user['id']);
-        //     Mail::to($user['email'])->send(new ReportMail($user, $report, $date));
-        // }
+        foreach ($users as $user) {
+            $report_mail = $dashboardRepository->monthSum($date['month'], $date['year'], $user['id']);
+            $hours_minutes = explode(":", $report_mail[0]->s_hours);
+            $report_mail[0]->s_hours = $hours_minutes[0] . ":00";
+            Mail::to($user['email'])->send(new ReportMail($user, $report_mail, $date));
 
-        $user = User::find(14);
+            $ministry['when'] = Carbon::now()->endOfMonth();
+            $ministry['type'] = 8;
+            $ministry['user_id'] = $user['id'];
+            $ministry['coworker'][0] = $user['coworker_id'];
+            $ministry['status'] = 'transfer';
 
-        //
+            $ministry_id = $ministryRepository->add($ministry);
+            $coworkerRepository->addToMinistry($ministry['coworker'], $ministry_id);
 
-        $report_mail = $dashboardRepository->monthSum($date['month'], $date['year'], $user['id']);
-        $hours_minutes = explode(":", $report_mail[0]->s_hours);
-        $report_mail[0]->s_hours = $hours_minutes[0] . ":00";
-        // Mail::to($user['email'])->send(new ReportMail($user, $report_mail, $date));
+            $report_subtract['id'] = $reportRepository->add($ministry_id);
+            $report_subtract['hours'] = "-00:" . $hours_minutes[1] . ":00";
 
-        $ministry_subtract['when'] = Carbon::now();
-        $ministry_subtract['type'] = 8;
-        $ministry_subtract['user_id'] = $user['id'];
-        $ministry_subtract['coworker'][0] = $user['coworker_id'];
+            DB::table('reports')
+                ->where('id', $report_subtract['id'])
+                ->update(['hours' => $report_subtract['hours']]);
 
-        $ministry_subtract_id = $ministryRepository->add($ministry_subtract);
-        $coworkerRepository->addToMinistry($ministry_subtract['coworker'], $ministry_subtract_id);
-        $ministryRepository->setInGoogleCalendar($ministry_subtract_id, $user);
+            $ministry['when'] = Carbon::now()->startOfMonth()->addMonth();
+            $ministry['status'] = 'accepted';
 
-        $report_subtract['id'] = $reportRepository->add($ministry_subtract_id);
-        $report_subtract['hours'] = "-00:". $hours_minutes[1].":00";
-        // $report_subtract['placements'] = 0
-        // $report_subtract['videos'] = 0
-        // $report_subtract['returns'] = 0
-        // $report_subtract['studies'] = $data['studies'];
-dump($report_subtract);
+            $ministry_id = $ministryRepository->add($ministry);
+            $coworkerRepository->addToMinistry($ministry['coworker'], $ministry_id);
+            $ministryRepository->setInGoogleCalendar($ministry_id, $user);
 
-        $reportRepository->edit($report_subtract);
+            $report_addition['id'] = $reportRepository->add($ministry_id);
+            $report_addition['hours'] = "00:" . $hours_minutes[1] . ":00";
+
+            DB::table('reports')
+                ->where('id', $report_addition['id'])
+                ->update(['hours' => $report_addition['hours']]);
+        }
     }
 }

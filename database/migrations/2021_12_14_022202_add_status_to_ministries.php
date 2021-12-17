@@ -14,7 +14,7 @@ class AddStatusToMinistries extends Migration
     public function up()
     {
         Schema::table('ministries', function (Blueprint $table) {
-            $table->enum('status', ['accepted', 'rejected', 'waiting'])->default('accepted');
+            $table->enum('status', ['accepted', 'rejected', 'waiting', 'transfer'])->default('accepted');
         });
     }
 
