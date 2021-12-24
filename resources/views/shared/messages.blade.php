@@ -55,7 +55,7 @@
                     @foreach ($ministryProposalUserList as $proposal)
                         {{ $proposal->users_original->name }} {{ $proposal->users_original->surname }}@if (!$loop->last),@endif
                     @endforeach
-                    dodali slużbę z Tobą, możesz ją sprawdzić <a href="{{ route('ministry.proposal') }}">tutaj</a>
+                    dodali slużbę z Tobą, możesz je sprawdzić <a href="{{ route('ministry.proposal') }}">tutaj</a>
                 @endif
             </strong>
         </div>

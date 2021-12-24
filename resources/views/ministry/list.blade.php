@@ -6,7 +6,7 @@
 
     <div class="card mt-3">
         <div class="card">
-            <div class="card-header"><i class="fas fa-table mr-1"></i>Lista sprawozdań</div>
+            <div class="card-header"><i class="fas fa-table mr-1"></i>Lista służb</div>
             <div class="card-body">
                 @if (!empty($when))
                     <form class="form-inline" action="{{ route('ministry.list') }}">

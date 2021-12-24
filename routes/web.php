@@ -120,17 +120,6 @@ Route::middleware(['auth'])->group(
 
         Route::group(
             [
-                'prefix' => 'user',
-                'as' => 'user.'
-            ],
-            function () {
-                Route::get('calendar_id', 'UserController@get_google_calendar_id')
-                    ->name('calendar_id');
-            }
-        );
-
-        Route::group(
-            [
                 'prefix' => 'google',
                 'as' => 'google.'
             ],
