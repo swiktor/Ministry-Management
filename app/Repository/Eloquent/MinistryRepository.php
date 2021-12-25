@@ -277,13 +277,14 @@ class MinistryRepository implements MinistryRepositoryInterface
 
     public function delete(int $ministry_id)
     {
-        $statusGC = $this->deleteFromGoogleCalendar($ministry_id);
+        // $statusGC = $this->deleteFromGoogleCalendar($ministry_id);
 
         $ministry = Ministry::find($ministry_id);
         $ministry->status = 'rejected';
         $ministry->event_id = null;
 
-        if ($ministry->save() && $statusGC) {
+        // if ($ministry->save() && $statusGC) {
+        if ($ministry->save()) {
             return 1;
         } else {
             return 0;
@@ -370,7 +371,7 @@ class MinistryRepository implements MinistryRepositoryInterface
         $ministry->save();
 
         $reportRepository->add($ministry_id);
-        $this->setInGoogleCalendar($ministry_id, Auth::user());
+        // $this->setInGoogleCalendar($ministry_id, Auth::user());
     }
 
     public function ministryProposalReject($ministry_id)

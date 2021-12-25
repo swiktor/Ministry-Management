@@ -75,7 +75,7 @@ class MinistryController extends Controller
 
         $this->reportRepository->add($ministry_id);
 
-        $this->ministryRepository->setInGoogleCalendar($ministry_id, Auth::user());
+        // $this->ministryRepository->setInGoogleCalendar($ministry_id, Auth::user());
 
         $this->ministryRepository->ministryProposalForUser($data['coworker'], $ministry_id, $this->coworkerRepository, $this->reportRepository);
 
@@ -125,8 +125,8 @@ class MinistryController extends Controller
         } else {
             $isEdited = $this->ministryRepository->edit($ministry_form);
             if ($isEdited) {
-                $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
-                $this->ministryRepository->setInGoogleCalendar($ministry_form['id'], Auth::user());
+                // $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
+                // $this->ministryRepository->setInGoogleCalendar($ministry_form['id'], Auth::user());
                 return redirect()
                     ->route('ministry.list')
                     ->with('success', 'Pomyślnie edytowano służbę');
