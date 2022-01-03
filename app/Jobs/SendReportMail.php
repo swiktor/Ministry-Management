@@ -63,7 +63,7 @@ class SendReportMail implements ShouldQueue
             $coworkerRepository->addToMinistry($ministry['coworker'], $ministry_id);
 
             $report_subtract['id'] = $reportRepository->add($ministry_id);
-            $report_subtract['hours'] = "-00:" . $hours_minutes[1] . ":00";
+            $report_subtract['hours'] = "00:" . $hours_minutes[1] . ":00";
 
             DB::table('reports')
                 ->where('id', $report_subtract['id'])
@@ -74,7 +74,7 @@ class SendReportMail implements ShouldQueue
 
             $ministry_id = $ministryRepository->add($ministry);
             $coworkerRepository->addToMinistry($ministry['coworker'], $ministry_id);
-            $ministryRepository->setInGoogleCalendar($ministry_id, $user);
+            // $ministryRepository->setInGoogleCalendar($ministry_id, $user);
 
             $report_addition['id'] = $reportRepository->add($ministry_id);
             $report_addition['hours'] = "00:" . $hours_minutes[1] . ":00";

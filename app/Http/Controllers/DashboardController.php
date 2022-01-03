@@ -24,10 +24,12 @@ class DashboardController extends Controller
     {
         $ministries = $this->dashboardRepository->incomingMinistries(10);
         $ministryProposalUserList=$this->dashboardRepository->ministryProposalUserList(Auth::user());
+        $incompleteReport=$this->dashboardRepository->incompleteReportFind(Auth::user());
 
         return view('ministry.list', [
             'ministries' => $ministries,
             'ministryProposalUserList' => $ministryProposalUserList,
+            'incompleteReport' => $incompleteReport,
         ]);
     }
 

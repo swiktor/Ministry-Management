@@ -65,17 +65,23 @@ class DashboardRepository implements DashboardRepositoryInterface
                 DB::raw("
                     sum(placements) as s_placements,
                     sum(videos) as s_videos,
-                    TIME_FORMAT(sec_to_time(sum(time_to_sec(hours))), '%H:%i') as s_hours,
+                    TIME_FORMAT(sec_to_time(sum(time_to_sec(hours))-(select IFNULL(sum(time_to_sec(hours)),'00:00:00') from `reports` inner join `ministries` on `reports`.`ministry_id` = `ministries`.`id`
+                     inner join `types` on `ministries`.`type_id` = `types`.`id`
+                     inner join `users` on `ministries`.`user_id` = `users`.`id`
+                     inner join `goals` on `users`.`goal_id` = `goals`.`id`
+                     where `ministries`.`user_id` = $user_id and reports.ministry_id
+                     in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)
+                     and `ministries`.`status` = 'transfer')), '%H:%i') as s_hours,
                     TIME_FORMAT(sec_to_time(sum(time_to_sec(duration))), '%H:%i') as s_types,
                     sum(studies) as s_studies,
                     sum(returns) as s_returns,
                     TIME_FORMAT(sec_to_time(sum(time_to_sec(hours))-sum(time_to_sec(duration))), '%H:%i') as balance_expectations_real,
                     TIME_FORMAT(sec_to_time(sum(time_to_sec(duration))-(time_to_sec(quantum))), '%H:%i') as balance_s_types_quantum,
-                    TIME_FORMAT(sec_to_time(sum(time_to_sec(hours)) - time_to_sec(goals.quantum)), '%H:%i') as hour_difference,
+                    TIME_FORMAT(sec_to_time(sum(time_to_sec(hours))-(select IFNULL(sum(time_to_sec(hours)),'00:00:00') from `reports` inner join `ministries` on `reports`.`ministry_id` = `ministries`.`id` inner join `types` on `ministries`.`type_id` = `types`.`id` inner join `users` on `ministries`.`user_id` = `users`.`id` inner join `goals` on `users`.`goal_id` = `goals`.`id` where `ministries`.`user_id` = $user_id and reports.ministry_id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year) and `ministries`.`status` = 'transfer') - time_to_sec(goals.quantum)), '%H:%i') as hour_difference,
                     TIME_FORMAT(ceil(sec_to_time((sum(time_to_sec(hours)) - time_to_sec(goals.quantum)) / (DAYOFMONTH(LAST_DAY(CURRENT_TIMESTAMP())) - DAY(CURRENT_TIMESTAMP())+1)*-1)), '%H:%i') as real_day_destination,
-                    TIME_FORMAT(sec_to_time(sum(time_to_sec(hours))-ceil(time_to_sec(goals.quantum) / DAYOFMONTH(LAST_DAY(CURRENT_TIMESTAMP())))*DAY(CURRENT_TIMESTAMP())), '%H:%i') as real_balance
+                    TIME_FORMAT(sec_to_time(sum(time_to_sec(hours))-(select IFNULL(sum(time_to_sec(hours)),'00:00:00') from `reports` inner join `ministries` on `reports`.`ministry_id` = `ministries`.`id` inner join `types` on `ministries`.`type_id` = `types`.`id` inner join `users` on `ministries`.`user_id` = `users`.`id` inner join `goals` on `users`.`goal_id` = `goals`.`id` where `ministries`.`user_id` = $user_id and reports.ministry_id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year) and `ministries`.`status` = 'transfer')-ceil(time_to_sec(goals.quantum) / DAYOFMONTH(LAST_DAY(CURRENT_TIMESTAMP())))*DAY(CURRENT_TIMESTAMP())), '%H:%i') as real_balance
                     ")
-            )
+        )
             ->join('ministries', 'reports.ministry_id', '=', 'ministries.id')
             ->join('types', 'ministries.type_id', '=', 'types.id')
             ->join('users', 'ministries.user_id', '=', 'users.id')
@@ -83,7 +89,6 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->where('ministries.user_id', $user_id)
             ->whereRaw("reports.ministry_id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
             ->where('ministries.status', 'accepted')
-            ->orWhere('ministries.status', 'transfer')
             ->get();
 
         return $monthSum;
@@ -104,4 +109,15 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->groupBy('user_id_original')
             ->get();
     }
+    public function incompleteReportFind($user)
+    {
+        return DB::table('ministries')
+        ->select('ministries.when', 'reports.id')
+        ->join('reports', 'reports.ministry_id', '=', 'ministries.id')
+        ->where('ministries.user_id', $user->id)
+            ->where('ministries.status', 'accepted')
+            ->whereRaw('ministries.id in (select reports.ministry_id from reports where reports.hours = "00:00:00")')
+            ->get();
+    }
+
 }

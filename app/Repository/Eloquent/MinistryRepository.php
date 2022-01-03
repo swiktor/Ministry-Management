@@ -304,7 +304,7 @@ class MinistryRepository implements MinistryRepositoryInterface
 
 
 
-    public function ministryProposalForUser($coworkers, $ministry_id, $coworkerRepository)
+    public function ministryProposalForUser($coworkers, $ministry_id, $coworkerRepository, $reportRepository)
     {
         $all_users_coworker_id = [];
         foreach (User::all() as $user) {
@@ -316,34 +316,33 @@ class MinistryRepository implements MinistryRepositoryInterface
 
         foreach ($users_in_ministry as $user_in_ministry) {
             $user = User::where('coworker_id', $user_in_ministry)->first();
-            $ministry_new = $ministry_orginal->replicate([
-                'event_id',
-            ])->fill([
-                'status' => 'waiting',
-                'user_id' => $user->id,
-                'user_id_original' => $ministry_orginal->user_id,
-            ]);
-            $ministry_new->save();
-            $ministry_new_id = $ministry_new->id;
+            if ($user->id != Auth::id()) {
+                $ministry_new = $ministry_orginal->replicate([
+                    'event_id',
+                ])->fill([
+                    'status' => 'accepted',
+                    'user_id' => $user->id,
+                    'user_id_original' => $ministry_orginal->user_id,
+                ]);
+                $ministry_new->save();
+                $ministry_new_id = $ministry_new->id;
 
-            $coworkers_id = DB::table('coworkers_ministries')
-                ->where('ministry_id', '=', $ministry_orginal->id)
-                ->pluck('coworker_id');
+                $coworkers_id = DB::table('coworkers_ministries')
+                    ->where('ministry_id', '=', $ministry_orginal->id)
+                    ->pluck('coworker_id');
 
-            $coworkers_id_new = array();
+                $coworkers_id_new = array();
 
-            foreach ($coworkers_id as $coworker_id) {
-                if ($coworker_id == $user_in_ministry) {
-                    array_push($coworkers_id_new, Auth::user()->coworker_id);
-                } else {
-                    array_push($coworkers_id_new, $coworker_id);
+                foreach ($coworkers_id as $coworker_id) {
+                    if ($coworker_id != $user_in_ministry) {
+                        array_push($coworkers_id_new, $coworker_id);
+                    }
                 }
+
+                $coworkerRepository->addToMinistry($coworkers_id_new, $ministry_new_id);
+                $reportRepository->add($ministry_id);
+                // Mail::to($user['email'])->send(new MinistryProposal($user, $ministry_new));
             }
-
-            $coworkerRepository->addToMinistry($coworkers_id_new, $ministry_new_id);
-
-            Mail::to($user['email'])->send(new MinistryProposal($user, $ministry_new));
-
         }
     }
 

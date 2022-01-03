@@ -35,7 +35,7 @@ interface MinistryRepository
 
     public function delete(int $id);
 
-    public function ministryProposalForUser($coworkers, $ministry_id, $coworkerRepository);
+    public function ministryProposalForUser($coworkers, $ministry_id, $coworkerRepository, $reportRepository);
 
     public function ministryProposalList($user_id, $limit);
 

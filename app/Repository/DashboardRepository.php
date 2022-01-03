@@ -10,4 +10,5 @@ interface DashboardRepository
     public function incomingMinistries(int $limit);
     public function coworkersBalance($month, $year, $limit);
     public function ministryProposalUserList($user_id);
+    public function incompleteReportFind($user);
 }
