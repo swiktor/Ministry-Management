@@ -24,4 +24,6 @@ interface CoworkerRepository
     public function add($data);
 
     public function addToMinistry($coworkers, $ministry_id);
+
+    public function addCoworkersToTeam($coworkers, $team_id);
 }

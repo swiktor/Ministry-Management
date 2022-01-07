@@ -1,12 +1,13 @@
 <?php
 
-use App\Providers\CongregationServiceProvider;
-use App\Providers\CoworkerServiceProvider;
-use App\Providers\DashboardServiceProvider;
 use App\Providers\GoalServiceProvider;
-use App\Providers\MinistryServiceProvider;
-use App\Providers\ReportServiceProvider;
+use App\Providers\TeamServiceProvider;
 use App\Providers\TypeServiceProvider;
+use App\Providers\ReportServiceProvider;
+use App\Providers\CoworkerServiceProvider;
+use App\Providers\MinistryServiceProvider;
+use App\Providers\DashboardServiceProvider;
+use App\Providers\CongregationServiceProvider;
 
 return [
 
@@ -190,7 +191,7 @@ return [
         DashboardServiceProvider::class,
         GoalServiceProvider::class,
         CongregationServiceProvider::class,
-
+        TeamServiceProvider::class,
     ],
 
     /*

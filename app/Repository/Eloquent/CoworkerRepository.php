@@ -108,4 +108,18 @@ class CoworkerRepository implements CoworkerRepositoryInterface
             ]);
         }
     }
+
+    public function addCoworkersToTeam($coworkers, $team_id)
+    {
+        foreach ($coworkers ?? [] as $coworker) {
+            DB::table('coworkers_teams')->insert([
+                'coworker_id' => $coworker,
+                'team_id' => $team_id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        }
+    }
+
+
 }

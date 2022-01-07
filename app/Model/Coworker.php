@@ -21,5 +21,10 @@ class Coworker extends Model
         return $this->belongsTo(Congregation::class, 'congregation_id', 'id');
     }
 
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'coworkers_teams');
+    }
+
     use HasFactory;
 }

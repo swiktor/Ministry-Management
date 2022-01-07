@@ -134,6 +134,21 @@ Route::middleware(['auth'])->group(
                     ->name('select');
             }
         );
+
+        Route::group(
+            [
+                'prefix' => 'team',
+                'as' => 'team.'
+            ],
+            function () {
+                Route::get('list', 'TeamController@list')
+                ->name('list');
+                Route::get('add/form', 'TeamController@addForm')
+                ->name('add.form');
+                Route::post('add', 'TeamController@add')
+                ->name('add');
+            }
+        );
     }
 );
 
