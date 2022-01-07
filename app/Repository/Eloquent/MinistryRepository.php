@@ -340,7 +340,7 @@ class MinistryRepository implements MinistryRepositoryInterface
                 }
 
                 $coworkerRepository->addToMinistry($coworkers_id_new, $ministry_new_id);
-                $reportRepository->add($ministry_id);
+                $reportRepository->add($ministry_new_id);
                 // Mail::to($user['email'])->send(new MinistryProposal($user, $ministry_new));
             }
         }
