@@ -27,7 +27,6 @@
                             <tr>
                                 <th class="align-middle">Lp</th>
                                 <th class="align-middle">Z kim</th>
-                                <th class="align-middle">Typ</th>
                                 <th class="align-middle">Kiedy</th>
                                 <th class="align-middle">Godziny</th>
                                 <th class="align-middle">Publikacje</th>
@@ -41,7 +40,6 @@
                             <tr>
                                 <th class="align-middle">Lp</th>
                                 <th class="align-middle">Z kim</th>
-                                <th class="align-middle">Typ</th>
                                 <th class="align-middle">Kiedy</th>
                                 <th class="align-middle">Godziny</th>
                                 <th class="align-middle">Publikacje</th>
@@ -60,7 +58,6 @@
                                             {{ $coworker->name . ' ' . $coworker->surname }}{!! '<br>' !!}
                                         @endforeach
                                     </td>
-                                    <td class="align-middle">{{ data_get($ministry, 'types.name') }}</td>
                                     <td class="align-middle">{{ $ministry->when->locale('pl')->dayName }},
                                         {{ $ministry->when->format('d.m.Y H:i') }}</td>
                                     <td class="align-middle">{{ data_get($ministry, 'reports.hours')->format('H:i') }}

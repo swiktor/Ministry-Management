@@ -61,37 +61,6 @@ foreach ($ministry[0]->coworkers as $coworker_old) {
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="type" class="col-md-4 col-form-label text-md-right">Wybierz typ
-                                </label>
-
-                                <div class="col-md-6">
-                                    <div class="dropdown bootstrap-select show-tick">
-                                        <select class="selectpicker form-control @error('type') is-invalid @enderror"
-                                            name="type" data-live-search="true" required>
-                                            @foreach ($types as $type)
-                                                @if ($ministry[0]->type_id == $type->id)
-                                                    <option selected value={{ $type->id }}>
-                                                        {{ $type->name . ' (' . $type->duration->format('H:i') . ')' }}
-                                                    </option>
-                                                @else
-                                                    <option value={{ $type->id }}>
-                                                        {{ $type->name . ' (' . $type->duration->format('H:i') . ')' }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('type')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-
-
                             <div class="form-group row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary">

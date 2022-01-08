@@ -54,7 +54,6 @@ class SendReportMail implements ShouldQueue
             Mail::to($user['email'])->send(new ReportMail($user, $report_mail, $date));
 
             $ministry['when'] = Carbon::now()->endOfMonth();
-            $ministry['type'] = 8;
             $ministry['user_id'] = $user['id'];
             $ministry['coworker'][0] = $user['coworker_id'];
             $ministry['status'] = 'transfer';

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository\Eloquent;
 
-use App\Model\Type;
 use App\Model\Report;
 use App\Model\Ministry;
 use App\Services\Google;
@@ -34,7 +33,6 @@ class MinistryRepository implements MinistryRepositoryInterface
     public function updateModel(Ministry $ministry, array $data): void
     {
         $ministry->user_id = $data['user_id'] ?? $ministry->user_id;
-        $ministry->type_id = $data['type_id'] ?? $ministry->type_id;
         $ministry->when = $data['when'] ?? $ministry->when;
 
         $ministry->save();
@@ -43,7 +41,6 @@ class MinistryRepository implements MinistryRepositoryInterface
     public function all(): Collection
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()
@@ -59,7 +56,6 @@ class MinistryRepository implements MinistryRepositoryInterface
     public function allPaginated($month, $year, $limit)
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()
@@ -85,7 +81,6 @@ class MinistryRepository implements MinistryRepositoryInterface
     public function listForCoworker(int $id)
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()
@@ -107,7 +102,6 @@ class MinistryRepository implements MinistryRepositoryInterface
             ->toArray(), 'ministry_id');
 
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) use ($id) {
                 $query
                     ->distinct()
@@ -124,7 +118,6 @@ class MinistryRepository implements MinistryRepositoryInterface
     public function add($data)
     {
         $ministry = new Ministry();
-        $ministry->type_id = $data['type'];
         $ministry->when = $data['when'];
         $ministry->user_id = $data['user_id'];
         $ministry->status = $data['status'];
@@ -147,16 +140,7 @@ class MinistryRepository implements MinistryRepositoryInterface
             }
         }
 
-        $type_name = Type::find($ministry->type_id)->name;
-
-        $type_duration = strtotime(Type::find($ministry->type_id)->duration->toTimeString());
-        $ministry_when_duration = strtotime($ministry->when->toTimeString()) + $type_duration;
-        $ministry_end_time_helper = date_create();
-        date_timestamp_set($ministry_end_time_helper, $ministry_when_duration);
-        $ministry_end_time = $ministry->when->toDateString() . " " . date_format($ministry_end_time_helper, 'H:i:s');
-
         $startDateTime = new Carbon($ministry->when->toDateTimeString(), 'Europe/Warsaw');
-        $endDateTime = new Carbon($ministry_end_time, 'Europe/Warsaw');
 
         $google =
             app(Google::class)
@@ -165,13 +149,12 @@ class MinistryRepository implements MinistryRepositoryInterface
 
         $event = new \Google_Service_Calendar_Event(array(
             'summary' => $coworkers,
-            'description' => $type_name,
             'start' => array(
                 'dateTime' => $startDateTime,
                 'timeZone' => 'Europe/Warsaw',
             ),
             'end' => array(
-                'dateTime' => $endDateTime,
+                'dateTime' => $startDateTime,
                 'timeZone' => 'Europe/Warsaw',
             ),
         ));
@@ -220,7 +203,6 @@ class MinistryRepository implements MinistryRepositoryInterface
 
         if (
             $ministry_form['id'] == (int) $ministry_db['id']
-            && $ministry_form['type_id'] == (int) $ministry_db['type_id']
             && $ministry_form['when'] == $ministry_db['when']
             && $ministry_form['user_id'] == $ministry_db['user_id']
             && $coworkers_id_form == $coworkers_id_db
@@ -248,11 +230,7 @@ class MinistryRepository implements MinistryRepositoryInterface
             array_push($coworkers_id_db, $coworker['id']);
         }
 
-        if (
-            $ministry_form['type_id'] != (int) $ministry_db['type_id']
-        ) {
-            $ministry_db->type_id = $ministry_form['type_id'];
-        } elseif ($ministry_form['when'] != $ministry_db['when']) {
+        if ($ministry_form['when'] != $ministry_db['when']) {
             $ministry_db->when = $ministry_form['when'];
         } elseif (!$coworkers_id_form != $coworkers_id_db) {
             $this->deleteCoworkersFromMinistry($ministry_db, $coworkers_id_db);
@@ -349,7 +327,6 @@ class MinistryRepository implements MinistryRepositoryInterface
     public function ministryProposalList($user_id, $limit)
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()

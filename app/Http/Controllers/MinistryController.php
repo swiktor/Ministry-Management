@@ -7,7 +7,6 @@ use App\Model\Ministry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\AddMinistry;
-use App\Repository\TypeRepository;
 use Illuminate\Support\Facades\DB;
 use App\Repository\ReportRepository;
 use Illuminate\Support\Facades\Auth;
@@ -18,14 +17,12 @@ class MinistryController extends Controller
 {
     private MinistryRepository $ministryRepository;
     private CoworkerRepository $coworkerRepository;
-    private TypeRepository $typeRepository;
     private ReportRepository $reportRepository;
 
-    public function __construct(MinistryRepository $ministryRepository, CoworkerRepository $coworkerRepository, TypeRepository $typeRepository, ReportRepository $reportRepository)
+    public function __construct(MinistryRepository $ministryRepository, CoworkerRepository $coworkerRepository, ReportRepository $reportRepository)
     {
         $this->ministryRepository = $ministryRepository;
         $this->coworkerRepository = $coworkerRepository;
-        $this->typeRepository = $typeRepository;
         $this->reportRepository = $reportRepository;
     }
 
@@ -53,11 +50,9 @@ class MinistryController extends Controller
     public function addForm()
     {
         $coworkers = $this->coworkerRepository->allActive();
-        $types = $this->typeRepository->all();
 
         return view('ministry.add', [
             'coworkers' => $coworkers,
-            'types' => $types,
             'title' => 'Umów',
         ]);
     }
@@ -97,11 +92,9 @@ class MinistryController extends Controller
     {
         $ministry = $this->ministryRepository->get($id);
         $coworkers = $this->coworkerRepository->allActive();
-        $types = $this->typeRepository->all();
 
         return view('ministry.edit', [
             'coworkers' => $coworkers,
-            'types' => $types,
             'ministry' => $ministry,
         ]);
     }
@@ -111,7 +104,6 @@ class MinistryController extends Controller
         $ministry_form = new Ministry();
 
         $ministry_form['id'] = (int)$request->get('id');
-        $ministry_form['type_id'] = (int)$request->get('type');
         $ministry_form['when'] = $request->get('when');
         $ministry_form['coworkers'] = $request->get('coworker');
         $ministry_form['user_id'] = Auth::id();

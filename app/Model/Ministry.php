@@ -8,15 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Ministry extends Model
 {
     protected $fillable = [
-        'id', 'type_id', 'when', 'user_id', 'event_id', 'status', 'user_id_original'
+        'id', 'when', 'user_id', 'event_id', 'status', 'user_id_original'
     ];
 
     protected $dates = ['when'];
-
-    public function types()
-    {
-        return $this->belongsTo(Type::class, 'type_id', 'id');
-    }
 
     public function users()
     {

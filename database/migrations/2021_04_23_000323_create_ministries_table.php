@@ -15,7 +15,6 @@ class CreateMinistriesTable extends Migration
     {
         Schema::create('ministries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('type_id')->constrained();
             $table->dateTime('when');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();

@@ -36,7 +36,6 @@ class ReportRepository implements ReportRepositoryInterface
     public function all(): Collection
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()
@@ -52,7 +51,6 @@ class ReportRepository implements ReportRepositoryInterface
     public function allPaginated($month, $year, $limit)
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()
