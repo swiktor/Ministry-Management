@@ -71,7 +71,7 @@ class ReportRepository implements ReportRepositoryInterface
 
     public function edit($data)
     {
-        $report = $this->reportModel->find($data['id']);
+        $report = $this->reportModel->find($data['report_id']);
 
         $report->hours = $data['hours'] ?? "00:00";
         $report->placements = $data['placements'] ?? 0;
@@ -79,7 +79,11 @@ class ReportRepository implements ReportRepositoryInterface
         $report->returns = $data['returns'] ?? 00;
         $report->studies = $data['studies'] ?? 0;
 
-        $report->save();
+        if ($report->save()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public function add($ministry_id)
@@ -89,5 +93,17 @@ class ReportRepository implements ReportRepositoryInterface
         $report->save();
 
         return $report->id;
+    }
+
+    public function compare($data)
+    {
+        $report_db = Report::find($data['report_id']);
+        $report_db->hours = $data['hours'];
+        $report_db->placements = $data['placements'];
+        $report_db->videos = $data['videos'];
+        $report_db->returns = $data['returns'];
+        $report_db->studies = $data['studies'];
+
+        return($report_db->isClean());
     }
 }

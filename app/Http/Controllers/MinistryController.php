@@ -7,6 +7,7 @@ use App\Model\Ministry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\AddMinistry;
+use App\Http\Requests\EditMinistry;
 use Illuminate\Support\Facades\DB;
 use App\Repository\ReportRepository;
 use Illuminate\Support\Facades\Auth;
@@ -88,37 +89,38 @@ class MinistryController extends Controller
         ]);
     }
 
-    public function editForm(int $id)
+    public function editForm(int $ministry_id)
     {
-        $ministry = $this->ministryRepository->get($id);
+        $ministry = $this->ministryRepository->get($ministry_id);
         $coworkers = $this->coworkerRepository->allActive();
+        $report = $this->reportRepository->get(Report::where('ministry_id', $ministry_id)->first()->id);
 
         return view('ministry.edit', [
             'coworkers' => $coworkers,
             'ministry' => $ministry,
+            'report' => $report,
         ]);
     }
 
-    public function edit(Request $request)
+    public function edit(EditMinistry $request)
     {
-        $ministry_form = new Ministry();
+        $data = $request->validated();
 
-        $ministry_form['id'] = (int)$request->get('id');
-        $ministry_form['when'] = $request->get('when');
-        $ministry_form['coworkers'] = $request->get('coworker');
-        $ministry_form['user_id'] = Auth::id();
+        $ministryCompare = $this->ministryRepository->compare($data);
+        $reportCompare = $this->reportRepository->compare($data);
 
-        $shouldEdited = $this->ministryRepository->compare($ministry_form);
-
-        if (!$shouldEdited) {
+        if ($ministryCompare && $reportCompare) {
             return redirect()
                 ->route('ministry.list')
                 ->with('info', 'Nie potrzeba edytować służby');
         } else {
-            $isEdited = $this->ministryRepository->edit($ministry_form);
-            if ($isEdited) {
-                // $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
-                // $this->ministryRepository->setInGoogleCalendar($ministry_form['id'], Auth::user());
+            $isMinistryEdited = $this->ministryRepository->edit($data);
+            $isReportEdited = $this->reportRepository->edit($data);
+            if ($isMinistryEdited && $isReportEdited) {
+                if ($isMinistryEdited) {
+                    // $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
+                    // $this->ministryRepository->setInGoogleCalendar($ministry_form['id'], Auth::user());
+                }
                 return redirect()
                     ->route('ministry.list')
                     ->with('success', 'Pomyślnie edytowano służbę');

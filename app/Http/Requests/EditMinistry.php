@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditReport extends FormRequest
+class EditMinistry extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,10 @@ class EditReport extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer',
+            'when' => 'required',
+            'coworkers' => 'required|array',
+            'ministry_id' => 'required|integer',
+            'report_id' => 'required|integer',
             'hours' => 'required',
             'placements' => 'required|integer|min:0',
             'videos' => 'required|integer|min:0',
@@ -40,6 +43,7 @@ class EditReport extends FormRequest
             'min' => 'Minimalna ilość cyfr to: :min',
             'required' => 'To pole jest wymagane',
             'integer' => 'Możesz wpisać tylko liczbę',
+            'array' => 'Parametr musi być tablicą',
         ];
     }
 }

@@ -20,4 +20,6 @@ interface ReportRepository
     public function edit($data);
 
     public function add($ministry_id);
+
+    public function compare($data);
 }

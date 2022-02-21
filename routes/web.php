@@ -90,17 +90,6 @@ Route::middleware(['auth'])->group(
                 ->name('ministry.list');
         });
 
-        Route::group([
-            'prefix' => 'report',
-            'as' => 'report.'
-        ], function () {
-            Route::get('edit/form/{id}', 'ReportController@editForm')
-                ->name('edit.form');
-
-            Route::post('edit', 'ReportController@edit')
-                ->name('edit');
-        });
-
         Route::group(
             [
                 'prefix' => 'congregation',

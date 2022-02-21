@@ -184,8 +184,14 @@ class MinistryRepository implements MinistryRepositoryInterface
         return 1;
     }
 
-    public function compare(Ministry $ministry_form)
+    public function compare($data)
     {
+        $ministry_form = new Ministry();
+        $ministry_form['id'] = $data['ministry_id'];
+        $ministry_form['when'] = $data['when'];
+        $ministry_form['coworkers'] = $data['coworkers'];
+        $ministry_form['user_id'] = Auth::id();
+
         $ministry_db =
             $this->ministryModel
             ->with('coworkers')
@@ -207,14 +213,20 @@ class MinistryRepository implements MinistryRepositoryInterface
             && $ministry_form['user_id'] == $ministry_db['user_id']
             && $coworkers_id_form == $coworkers_id_db
         ) {
-            return 0;
-        } else {
             return 1;
+        } else {
+            return 0;
         }
     }
 
-    public function edit(Ministry $ministry_form)
+    public function edit($data)
     {
+        $ministry_form = new Ministry();
+        $ministry_form['id'] = $data['ministry_id'];
+        $ministry_form['when'] = $data['when'];
+        $ministry_form['coworkers'] = $data['coworkers'];
+        $ministry_form['user_id'] = Auth::id();
+
         $ministry_db =
             $this->ministryModel
             ->with('coworkers')

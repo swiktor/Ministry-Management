@@ -69,10 +69,6 @@
                                     <td class="align-middle">{{ data_get($ministry, 'reports.studies') }}</td>
 
                                     <td class="align-middle">
-                                        <a
-                                            href="{{ route('report.edit.form', ['id' => data_get($ministry, 'reports.id')]) }}">
-                                            <button class="btn btn-info">Sprawozdanie</button>
-                                        </a>
                                         @if (!auth()->user()->googleAccounts->isEmpty())
                                             <a href="{{ route('ministry.form.edit', ['id' => $ministry->id]) }}">
                                                 <button class="btn btn-warning">Edytuj</button>
