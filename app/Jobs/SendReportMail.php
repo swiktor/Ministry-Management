@@ -42,8 +42,8 @@ class SendReportMail implements ShouldQueue
         $ministryRepository = \App::make('App\Repository\MinistryRepository');
         $coworkerRepository = \App::make('App\Repository\CoworkerRepository');
         $reportRepository = \App::make('App\Repository\ReportRepository');
-        $date['month'] = Carbon::now()->month;
-        $date['year'] = Carbon::now()->year;
+        $date['month'] = Carbon::yesterday()->month;
+        $date['year'] = Carbon::yesterday()->year;
 
         $users = User::all();
 
@@ -53,7 +53,7 @@ class SendReportMail implements ShouldQueue
             $report_mail[0]->s_hours = $hours_minutes[0] . ":00";
             Mail::to($user['email'])->send(new ReportMail($user, $report_mail, $date));
 
-            $ministry['when'] = Carbon::now()->endOfMonth();
+            $ministry['when'] = Carbon::yesterday()->endOfMonth();
             $ministry['user_id'] = $user['id'];
             $ministry['coworker'][0] = $user['coworker_id'];
             $ministry['status'] = 'transfer';
@@ -68,7 +68,7 @@ class SendReportMail implements ShouldQueue
                 ->where('id', $report_subtract['id'])
                 ->update(['hours' => $report_subtract['hours']]);
 
-            $ministry['when'] = Carbon::now()->startOfMonth()->addMonth();
+            $ministry['when'] = Carbon::yesterday()->startOfMonth()->addMonth();
             $ministry['status'] = 'accepted';
 
             $ministry_id = $ministryRepository->add($ministry);

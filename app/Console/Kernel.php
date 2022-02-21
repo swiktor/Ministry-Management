@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new SendReportMail())->lastDayOfMonth('22:00')->timezone('Europe/Warsaw');
-        $schedule->job(new RefreshGoogleToken());
+        $schedule->job(new SendReportMail())->cron('0 10 1 * *')->timezone('Europe/Warsaw');
+        // $schedule->job(new RefreshGoogleToken());
     }
 
     /**
