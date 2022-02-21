@@ -20,12 +20,11 @@
                 </form>
                 @endif
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-striped" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="text-center">Lp</th>
-                                <th class="text-center">Nazwisko</th>
-                                <th class="text-center">Imię</th>
+                                <th class="text-center">Imię i nazwisko</th>
                                 <th class="text-center">Ilość wyruszeń</th>
                                 <th class="text-center">Opcje</th>
                             </tr>
@@ -33,18 +32,16 @@
                         <tfoot>
                             <tr>
                                 <th class="text-center">Lp</th>
-                                <th class="text-center">Nazwisko</th>
-                                <th class="text-center">Imię</th>
+                                <th class="text-center">Imię i nazwisko</th>
                                 <th class="text-center">Ilość wyruszeń</th>
                                 <th class="text-center">Opcje</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach ($coworkers ?? [] as $coworker)
+                            @foreach ($coworkers ?? [] as $key => $coworker)
                                 <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td class="text-center">{{ $coworker->surname }}</td>
-                                    <td class="text-center">{{ $coworker->name }}</td>
+                                    <td class="text-center">{{ $coworkers->firstItem() + $key }}</td>
+                                    <td class="text-center">{{ $coworker->name }} {{ $coworker->surname }}</td>
                                     <td class="text-center">{{ $coworker->count }}</td>
                                     <td class="text-center">
                                         <a

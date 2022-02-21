@@ -26,9 +26,9 @@ Route::middleware(['auth'])->group(
             'as' => 'dashboard.'
         ], function () {
             Route::get('coworker', 'DashboardController@coworker')
-            ->name('coworker');
+                ->name('coworker');
             Route::get('report', 'DashboardController@report')
-            ->name('report');
+                ->name('report');
         });
 
         Route::group([
@@ -45,14 +45,22 @@ Route::middleware(['auth'])->group(
                 ->name('add');
 
             Route::get('edit/form/{id}', 'MinistryController@editForm')
-            ->name('form.edit');
+                ->name('form.edit');
 
             Route::post('edit', 'MinistryController@edit')
-            ->name('edit');
+                ->name('edit');
 
             Route::get('delete/{id}', 'MinistryController@delete')
-            ->name('delete');
+                ->name('delete');
 
+            Route::get('proposal', 'MinistryController@proposal')
+                ->name('proposal');
+
+            Route::get('proposal/accept/{id}', 'MinistryController@proposalAccept')
+            ->name('proposal.accept');
+
+            Route::get('proposal/reject/{id}', 'MinistryController@proposalReject')
+            ->name('proposal.reject');
         });
 
         Route::group([
@@ -71,26 +79,65 @@ Route::middleware(['auth'])->group(
             Route::post('add', 'CoworkerController@add')
                 ->name('add');
 
+            Route::get('link/form', 'CoworkerController@linkForm')
+                ->name('link.form');
+
+            Route::post('link', 'CoworkerController@link')
+                ->name('link');
+
             Route::get('list/{id}', 'MinistryController@listForCoworker')
-            ->where(['id' => '[0-9]+'])
-            ->name('ministry.list');
-
+                ->where(['id' => '[0-9]+'])
+                ->name('ministry.list');
         });
 
-        Route::group([
-            'prefix' => 'report',
-            'as' => 'report.'
-        ], function () {
-            Route::get('list', 'ReportController@list')
+        Route::group(
+            [
+                'prefix' => 'congregation',
+                'as' => 'congregation.'
+            ],
+            function () {
+                Route::get('list', 'CongregationController@list')
+                    ->name('list');
+
+                Route::get('add/form', 'CongregationController@addForm')
+                    ->name('add.form');
+
+                Route::post('add', 'CongregationController@add')
+                    ->name('add');
+            }
+        );
+
+        Route::group(
+            [
+                'prefix' => 'google',
+                'as' => 'google.'
+            ],
+            function () {
+                Route::get('index', 'GoogleAccountController@index')
+                    ->name('index');
+                Route::get('oauth', 'GoogleAccountController@store')
+                    ->name('store');
+                Route::delete('{googleAccount}', 'GoogleAccountController@destroy')
+                    ->name('destroy');
+                Route::post('{googleCalendar}', 'GoogleAccountController@select')
+                    ->name('select');
+            }
+        );
+
+        Route::group(
+            [
+                'prefix' => 'team',
+                'as' => 'team.'
+            ],
+            function () {
+                Route::get('list', 'TeamController@list')
                 ->name('list');
-
-            Route::get('edit/form/{id}', 'ReportController@editForm')
-            ->name('edit.form');
-
-            Route::post('edit', 'ReportController@edit')
-                ->name('edit');
-
-        });
+                Route::get('add/form', 'TeamController@addForm')
+                ->name('add.form');
+                Route::post('add', 'TeamController@add')
+                ->name('add');
+            }
+        );
     }
 );
 

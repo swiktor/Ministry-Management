@@ -25,6 +25,8 @@
 @import "navigation/sidenav/sidenav-dark";
 @import "navigation/sidenav/sidenav-light";
 @import "../../node_modules/bootstrap-select/sass/bootstrap-select.scss";
+@import "../../node_modules/jquery-reflow-table/dist/css/reflow-table.css";
+
 #layoutAuthentication {
     margin-top: 70px;
 }
@@ -37,4 +39,12 @@
 .container
 {
     margin-top: 70px;
+}
+
+.reflow-table td:before {
+  display: block !important;
+}
+
+.testowa{
+display: block;
 }

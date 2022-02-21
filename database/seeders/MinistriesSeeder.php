@@ -24,7 +24,6 @@ class MinistriesSeeder extends Seeder
                 $ministries = [];
                 for ($i = 0; $i < 100; $i++) {
                     $ministries[] = [
-                        'type_id' => $faker->numberBetween(1, 8),
                         'when' => $faker->dateTime(),
                         'user_id' => $faker->numberBetween(1, 2),
                         'created_at' => Carbon::now(),

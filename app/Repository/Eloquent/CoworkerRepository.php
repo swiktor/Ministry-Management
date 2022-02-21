@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Repository\Eloquent;
 
 use App\Model\Coworker;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Auth;
 use App\Repository\CoworkerRepository as CoworkerRepositoryInterface;
 
 
@@ -31,17 +34,19 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function allActive(): Collection
     {
         return $this->coworkerModel
+            ->with('congregations')
             ->orderBy('surname')
             ->orderBy('name')
             ->where('active', 1)
             ->get();
     }
 
-    public function allActivePaginated(int $limit = 10)
+    public function allActivePaginated($congregation, int $limit = 10)
     {
         return $this->coworkerModel
             ->orderBy('surname')
             ->orderBy('name')
+            ->where('congregation_id', $congregation)
             ->where('active', 1)
             ->paginate($limit);
     }
@@ -54,7 +59,9 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function neverActive()
     {
         $ids = DB::table('coworkers_ministries')
-            ->select('coworker_id')
+        ->select('coworker_id')
+        ->join('ministries', 'coworkers_ministries.ministry_id', '=', 'ministries.id')
+        ->where('ministries.user_id', Auth::id())
             ->distinct()
             ->pluck('coworker_id')
             ->toArray();
@@ -70,7 +77,9 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function neverActivePaginated(int $limit = 10)
     {
         $ids = DB::table('coworkers_ministries')
-            ->select('coworker_id')
+        ->select('coworker_id')
+        ->join('ministries', 'coworkers_ministries.ministry_id', '=', 'ministries.id')
+        ->where('ministries.user_id', Auth::id())
             ->distinct()
             ->pluck('coworker_id')
             ->toArray();
@@ -88,6 +97,7 @@ class CoworkerRepository implements CoworkerRepositoryInterface
         $coworker = new Coworker();
         $coworker->name = $data['name'];
         $coworker->surname = $data['surname'];
+        $coworker->congregation_id = $data['congregation'];
 
         $coworker->save();
     }
@@ -97,8 +107,24 @@ class CoworkerRepository implements CoworkerRepositoryInterface
         foreach ($coworkers ?? [] as $coworker) {
             DB::table('coworkers_ministries')->insert([
                 'coworker_id' => $coworker,
-                'ministry_id' => $ministry_id
+                'ministry_id' => $ministry_id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
         }
     }
+
+    public function addCoworkersToTeam($coworkers, $team_id)
+    {
+        foreach ($coworkers ?? [] as $coworker) {
+            DB::table('coworkers_teams')->insert([
+                'coworker_id' => $coworker,
+                'team_id' => $team_id,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        }
+    }
+
+
 }

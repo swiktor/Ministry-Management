@@ -23,16 +23,23 @@ interface MinistryRepository
 
     public function add($data);
 
-    public function setInGoogleCalendar($ministry_id);
+    public function setInGoogleCalendar($ministry_id, $user);
 
     public function deleteFromGoogleCalendar($ministry_id);
 
-    public function compare(Ministry $ministry);
+    public function compare($data);
 
-    public function edit(Ministry $ministry);
+    public function edit($data);
 
     public function deleteCoworkersFromMinistry(Ministry $ministry_db, $coworkers_id_db);
 
     public function delete(int $id);
 
+    public function ministryProposalForUser($coworkers, $ministry_id, $coworkerRepository, $reportRepository);
+
+    public function ministryProposalList($user_id, $limit);
+
+    public function ministryProposalAccept($ministry_id, $reportRepository);
+
+    public function ministryProposalReject($ministry_id);
 }

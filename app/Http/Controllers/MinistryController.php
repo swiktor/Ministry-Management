@@ -7,7 +7,7 @@ use App\Model\Ministry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Requests\AddMinistry;
-use App\Repository\TypeRepository;
+use App\Http\Requests\EditMinistry;
 use Illuminate\Support\Facades\DB;
 use App\Repository\ReportRepository;
 use Illuminate\Support\Facades\Auth;
@@ -18,14 +18,12 @@ class MinistryController extends Controller
 {
     private MinistryRepository $ministryRepository;
     private CoworkerRepository $coworkerRepository;
-    private TypeRepository $typeRepository;
     private ReportRepository $reportRepository;
 
-    public function __construct(MinistryRepository $ministryRepository, CoworkerRepository $coworkerRepository, TypeRepository $typeRepository, ReportRepository $reportRepository)
+    public function __construct(MinistryRepository $ministryRepository, CoworkerRepository $coworkerRepository, ReportRepository $reportRepository)
     {
         $this->ministryRepository = $ministryRepository;
         $this->coworkerRepository = $coworkerRepository;
-        $this->typeRepository = $typeRepository;
         $this->reportRepository = $reportRepository;
     }
 
@@ -44,7 +42,7 @@ class MinistryController extends Controller
 
         $ministries = $this->ministryRepository->allPaginated($month, $year, 10);
 
-            return view('ministry.list', [
+        return view('ministry.list', [
             'ministries' => $ministries,
             'when' => $when,
         ]);
@@ -53,11 +51,9 @@ class MinistryController extends Controller
     public function addForm()
     {
         $coworkers = $this->coworkerRepository->allActive();
-        $types = $this->typeRepository->all();
 
         return view('ministry.add', [
             'coworkers' => $coworkers,
-            'types' => $types,
             'title' => 'Umów',
         ]);
     }
@@ -66,13 +62,18 @@ class MinistryController extends Controller
     {
         $data = $request->validated();
 
+        $data['user_id'] = Auth::id();
+        $data['status'] = 'accepted';
+
         $ministry_id = $this->ministryRepository->add($data);
 
         $this->coworkerRepository->addToMinistry($data['coworker'], $ministry_id);
 
         $this->reportRepository->add($ministry_id);
 
-        $this->ministryRepository->setInGoogleCalendar($ministry_id);
+        // $this->ministryRepository->setInGoogleCalendar($ministry_id, Auth::user());
+
+        $this->ministryRepository->ministryProposalForUser($data['coworker'], $ministry_id, $this->coworkerRepository, $this->reportRepository);
 
         return redirect()
             ->route('ministry.list')
@@ -88,40 +89,38 @@ class MinistryController extends Controller
         ]);
     }
 
-    public function editForm(int $id)
+    public function editForm(int $ministry_id)
     {
-        $ministry = $this->ministryRepository->get($id);
+        $ministry = $this->ministryRepository->get($ministry_id);
         $coworkers = $this->coworkerRepository->allActive();
-        $types = $this->typeRepository->all();
+        $report = $this->reportRepository->get(Report::where('ministry_id', $ministry_id)->first()->id);
 
         return view('ministry.edit', [
             'coworkers' => $coworkers,
-            'types' => $types,
             'ministry' => $ministry,
+            'report' => $report,
         ]);
     }
 
-    public function edit(Request $request)
+    public function edit(EditMinistry $request)
     {
-        $ministry_form = new Ministry();
+        $data = $request->validated();
 
-        $ministry_form['id'] = (int)$request->get('id');
-        $ministry_form['type_id'] = (int)$request->get('type');
-        $ministry_form['when'] = $request->get('when');
-        $ministry_form['coworkers'] = $request->get('coworker');
-        $ministry_form['user_id'] = Auth::id();
+        $ministryCompare = $this->ministryRepository->compare($data);
+        $reportCompare = $this->reportRepository->compare($data);
 
-        $shouldEdited = $this->ministryRepository->compare($ministry_form);
-
-        if (!$shouldEdited) {
+        if ($ministryCompare && $reportCompare) {
             return redirect()
                 ->route('ministry.list')
                 ->with('info', 'Nie potrzeba edytować służby');
         } else {
-            $isEdited = $this->ministryRepository->edit($ministry_form);
-            if ($isEdited) {
-                $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
-                $this->ministryRepository->setInGoogleCalendar($ministry_form['id']);
+            $isMinistryEdited = $this->ministryRepository->edit($data);
+            $isReportEdited = $this->reportRepository->edit($data);
+            if ($isMinistryEdited && $isReportEdited) {
+                if ($isMinistryEdited) {
+                    // $this->ministryRepository->deleteFromGoogleCalendar($ministry_form['id']);
+                    // $this->ministryRepository->setInGoogleCalendar($ministry_form['id'], Auth::user());
+                }
                 return redirect()
                     ->route('ministry.list')
                     ->with('success', 'Pomyślnie edytowano służbę');
@@ -146,5 +145,29 @@ class MinistryController extends Controller
                 ->route('ministry.list')
                 ->with('error', 'Nie udało się usunąć służby');
         }
+    }
+
+    public function proposal()
+    {
+        $proposalList = $this->ministryRepository->ministryProposalList(Auth::id(), 10);
+        return view('ministry.proposal', [
+            'ministries' => $proposalList,
+        ]);
+    }
+
+    public function proposalAccept(int $id)
+    {
+        $this->ministryRepository->ministryProposalAccept($id, $this->reportRepository);
+        return redirect()
+            ->route('ministry.list')
+            ->with('success', 'Pomyślnie zaakceptowano propozycję');
+    }
+
+    public function proposalReject(int $id)
+    {
+        $this->ministryRepository->ministryProposalReject($id);
+        return redirect()
+            ->route('ministry.proposal')
+            ->with('success', 'Pomyślnie odrzucono propozycję');
     }
 }

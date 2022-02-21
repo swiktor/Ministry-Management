@@ -21,13 +21,18 @@
                     </form>
                 @endif
                 <div class="table-responsive">
-                    <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered text-center table-striped" id="dataTable" width="100%"
+                        cellspacing="0">
                         <thead>
                             <tr>
                                 <th class="align-middle">Lp</th>
                                 <th class="align-middle">Z kim</th>
-                                <th class="align-middle">Typ</th>
                                 <th class="align-middle">Kiedy</th>
+                                <th class="align-middle">Godziny</th>
+                                <th class="align-middle">Publikacje</th>
+                                <th class="align-middle">Filmy</th>
+                                <th class="align-middle">Odwiedziny</th>
+                                <th class="align-middle">Studia</th>
                                 <th class="align-middle">Opcje</th>
                             </tr>
                         </thead>
@@ -35,34 +40,44 @@
                             <tr>
                                 <th class="align-middle">Lp</th>
                                 <th class="align-middle">Z kim</th>
-                                <th class="align-middle">Typ</th>
                                 <th class="align-middle">Kiedy</th>
+                                <th class="align-middle">Godziny</th>
+                                <th class="align-middle">Publikacje</th>
+                                <th class="align-middle">Filmy</th>
+                                <th class="align-middle">Odwiedziny</th>
+                                <th class="align-middle">Studia</th>
                                 <th class="align-middle">Opcje</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach ($ministries ?? [] as $ministry)
+                            @foreach ($ministries ?? [] as $key => $ministry)
                                 <tr>
-                                    <td class="align-middle">{{ $loop->iteration }}</td>
+                                    <td class="align-middle">{{ $ministries->firstItem() + $key }}</td>
                                     <td class="align-middle">
                                         @foreach ($ministry->coworkers as $coworker)
                                             {{ $coworker->name . ' ' . $coworker->surname }}{!! '<br>' !!}
                                         @endforeach
                                     </td>
-                                    <td class="align-middle">
-                                        {{ $ministry->types->name . ' (' . $ministry->types->duration->format('H:i') . ')' }}
+                                    <td class="align-middle">{{ $ministry->when->locale('pl')->dayName }},
+                                        {{ $ministry->when->format('d.m.Y H:i') }}</td>
+                                    <td class="align-middle">{{ data_get($ministry, 'reports.hours')->format('H:i') }}
                                     </td>
-                                    <td class="align-middle">{{ $ministry->when->format('d.m.Y H:i') }}</td>
+
+                                    <td class="align-middle">{{ data_get($ministry, 'reports.placements') }}</td>
+                                    <td class="align-middle">{{ data_get($ministry, 'reports.videos') }}</td>
+                                    <td class="align-middle">{{ data_get($ministry, 'reports.returns') }}</td>
+                                    <td class="align-middle">{{ data_get($ministry, 'reports.studies') }}</td>
+
                                     <td class="align-middle">
-                                        <a href="{{ route('report.edit.form', ['id' => $ministry->reports->id]) }}">
-                                            <button class="btn btn-info">Sprawozdanie</button>
-                                        </a>
-                                        <a href="{{ route('ministry.form.edit', ['id' => $ministry->id]) }}">
-                                            <button class="btn btn-warning">Edytuj</button>
-                                        </a>
-                                        <a href="{{ route('ministry.delete', ['id' => $ministry->reports->id]) }}">
-                                            <button class="btn btn-danger">Usuń</button>
-                                        </a>
+                                        @if (!auth()->user()->googleAccounts->isEmpty())
+                                            <a href="{{ route('ministry.form.edit', ['id' => $ministry->id]) }}">
+                                                <button class="btn btn-warning">Edytuj</button>
+                                            </a>
+                                            <a href="{{ route('ministry.delete', ['id' => $ministry->id]) }}">
+                                                <button onclick="return confirm('Czy na pewno chcesz usunąć tę służbę?')"
+                                                    class="btn btn-danger">Usuń</button>
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

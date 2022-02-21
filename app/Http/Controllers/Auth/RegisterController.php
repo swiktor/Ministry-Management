@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Model\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Mail\WelcomeMail;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use App\Repository\CongregationRepository;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -24,6 +27,8 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    private CongregationRepository $congregationRepository;
+
     /**
      * Where to redirect users after registration.
      *
@@ -36,9 +41,10 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(CongregationRepository $congregationRepository)
     {
         $this->middleware('guest');
+        $this->congregationRepository = $congregationRepository;
     }
 
     /**
@@ -51,8 +57,10 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'surname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'congregation' => ['required', 'integer'],
         ]);
     }
 
@@ -64,11 +72,25 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
+            'surname' => $data['surname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'goal_id' => '1',
+            'congregation_id' => $data['congregation'],
+        ]);
+
+        // Mail::to($data['email'])->send(new WelcomeMail($user));
+
+        return $user;
+    }
+
+    public function showRegistrationForm()
+    {
+        $congregations = $this->congregationRepository->all();
+        return view('auth.register', [
+            'congregations' => $congregations
         ]);
     }
 }

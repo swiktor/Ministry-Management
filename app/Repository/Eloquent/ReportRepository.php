@@ -36,7 +36,6 @@ class ReportRepository implements ReportRepositoryInterface
     public function all(): Collection
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()
@@ -52,7 +51,6 @@ class ReportRepository implements ReportRepositoryInterface
     public function allPaginated($month, $year, $limit)
     {
         return $this->ministryModel
-            ->with('types')
             ->with(['coworkers' => function ($query) {
                 $query
                     ->distinct()
@@ -62,7 +60,7 @@ class ReportRepository implements ReportRepositoryInterface
             ->with('reports')
             ->where('user_id', Auth::id())
             ->whereRaw("id in (select id from ministries where MONTH(ministries.when) = $month AND YEAR(ministries.when) = $year)")
-            ->orderBy('when', 'asc')
+            ->orderBy('when', 'desc')
             ->paginate($limit);
     }
 
@@ -73,15 +71,19 @@ class ReportRepository implements ReportRepositoryInterface
 
     public function edit($data)
     {
-        $report = $this-> reportModel->find($data['id']);
+        $report = $this->reportModel->find($data['report_id']);
 
-        $report->hours = $data['hours'];
-        $report->placements = $data['placements'];
-        $report->videos = $data['videos'];
-        $report->returns = $data['returns'];
-        $report->studies = $data['studies'];
+        $report->hours = $data['hours'] ?? "00:00";
+        $report->placements = $data['placements'] ?? 0;
+        $report->videos = $data['videos'] ?? 0;
+        $report->returns = $data['returns'] ?? 00;
+        $report->studies = $data['studies'] ?? 0;
 
-        $report->save();
+        if ($report->save()) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public function add($ministry_id)
@@ -89,5 +91,19 @@ class ReportRepository implements ReportRepositoryInterface
         $report = new Report();
         $report->ministry_id = $ministry_id;
         $report->save();
+
+        return $report->id;
+    }
+
+    public function compare($data)
+    {
+        $report_db = Report::find($data['report_id']);
+        $report_db->hours = $data['hours'];
+        $report_db->placements = $data['placements'];
+        $report_db->videos = $data['videos'];
+        $report_db->returns = $data['returns'];
+        $report_db->studies = $data['studies'];
+
+        return($report_db->isClean());
     }
 }

@@ -2,9 +2,12 @@
 
 namespace App\Model;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Model\Event;
+use App\Model\Calendar;
+use App\Model\GoogleAccount;
+
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -16,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'goal_id',
+        'name', 'email', 'password', 'goal_id', 'congregation_id', 'calendar_id', 'surname'
     ];
 
     /**
@@ -40,6 +43,35 @@ class User extends Authenticatable
     public function ministries()
     {
         return $this->hasMany(Ministry::class, 'user_id', 'id');
+    }
+
+    public function goals()
+    {
+        return $this->hasOne(Goal::class, 'id', 'goal_id');
+    }
+
+    public function congregations()
+    {
+        return $this->hasOne(Congregation::class, 'id', 'congregation_id');
+    }
+
+    public function googleAccounts()
+    {
+        return $this->hasMany(GoogleAccount::class);
+    }
+
+    public function calendars()
+    {
+        return Calendar::whereHas('googleAccount', function ($accountQuery) {
+                $accountQuery->whereHas('user', function ($userQuery) {
+                    $userQuery->where('id', $this->id);
+                });
+            });
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'users_teams');
     }
 
 }

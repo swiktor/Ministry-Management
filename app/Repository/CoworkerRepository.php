@@ -15,7 +15,7 @@ interface CoworkerRepository
 
     public function get(int $id);
 
-    public function allActivePaginated(int $limit);
+    public function allActivePaginated(int $congregation, int $limit);
 
     public function neverActive();
 
@@ -24,4 +24,6 @@ interface CoworkerRepository
     public function add($data);
 
     public function addToMinistry($coworkers, $ministry_id);
+
+    public function addCoworkersToTeam($coworkers, $team_id);
 }

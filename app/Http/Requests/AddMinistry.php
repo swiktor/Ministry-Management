@@ -24,7 +24,6 @@ class AddMinistry extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required|integer',
             'when' => 'required',
             'coworker' => 'required|array',
         ];
@@ -34,7 +33,6 @@ class AddMinistry extends FormRequest
     {
         return [
             'required' => 'Pole wymagane',
-            'integer' => 'Możesz wpisać tylko cyfry',
             'array' => 'Parametr musi być tablicą'
         ];
     }
