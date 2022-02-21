@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Auth;
 use App\Repository\CoworkerRepository as CoworkerRepositoryInterface;
 
 
@@ -58,7 +59,9 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function neverActive()
     {
         $ids = DB::table('coworkers_ministries')
-            ->select('coworker_id')
+        ->select('coworker_id')
+        ->join('ministries', 'coworkers_ministries.ministry_id', '=', 'ministries.id')
+        ->where('ministries.user_id', Auth::id())
             ->distinct()
             ->pluck('coworker_id')
             ->toArray();
@@ -74,7 +77,9 @@ class CoworkerRepository implements CoworkerRepositoryInterface
     public function neverActivePaginated(int $limit = 10)
     {
         $ids = DB::table('coworkers_ministries')
-            ->select('coworker_id')
+        ->select('coworker_id')
+        ->join('ministries', 'coworkers_ministries.ministry_id', '=', 'ministries.id')
+        ->where('ministries.user_id', Auth::id())
             ->distinct()
             ->pluck('coworker_id')
             ->toArray();
