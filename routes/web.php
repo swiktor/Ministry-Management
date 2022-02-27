@@ -31,53 +31,40 @@ Route::middleware(['auth'])->group(
                 ->name('report');
         });
 
+        Route::resource('ministry', MinistryController::class)->except('show');
+
         Route::group([
             'prefix' => 'ministry',
             'as' => 'ministry.'
         ], function () {
-            Route::get('list', 'MinistryController@list')
-                ->name('list');
-
-            Route::get('add/form', 'MinistryController@addForm')
-                ->name('form.add');
-
-            Route::post('add', 'MinistryController@add')
-                ->name('add');
-
-            Route::get('edit/form/{id}', 'MinistryController@editForm')
-                ->name('form.edit');
-
-            Route::post('edit', 'MinistryController@edit')
-                ->name('edit');
-
-            Route::get('delete/{id}', 'MinistryController@delete')
-                ->name('delete');
-
             Route::get('proposal', 'MinistryController@proposal')
                 ->name('proposal');
 
             Route::get('proposal/accept/{id}', 'MinistryController@proposalAccept')
-            ->name('proposal.accept');
+                ->name('proposal.accept');
 
             Route::get('proposal/reject/{id}', 'MinistryController@proposalReject')
-            ->name('proposal.reject');
+                ->name('proposal.reject');
         });
+
+
+
 
         Route::group([
             'prefix' => 'coworker',
             'as' => 'coworker.'
         ], function () {
             Route::get('list', 'CoworkerController@list')
-                ->name('list');
+                ->name('list'); //index
+
+            Route::get('add/form', 'CoworkerController@addForm')
+                ->name('add.form'); //create
+
+            Route::post('add', 'CoworkerController@add')
+                ->name('add'); //store
 
             Route::get('never', 'CoworkerController@never')
                 ->name('never');
-
-            Route::get('add/form', 'CoworkerController@addForm')
-                ->name('add.form');
-
-            Route::post('add', 'CoworkerController@add')
-                ->name('add');
 
             Route::get('link/form', 'CoworkerController@linkForm')
                 ->name('link.form');
@@ -97,13 +84,13 @@ Route::middleware(['auth'])->group(
             ],
             function () {
                 Route::get('list', 'CongregationController@list')
-                    ->name('list');
+                    ->name('list'); //index
 
                 Route::get('add/form', 'CongregationController@addForm')
-                    ->name('add.form');
+                    ->name('add.form'); //create
 
                 Route::post('add', 'CongregationController@add')
-                    ->name('add');
+                    ->name('add'); //store
             }
         );
 
@@ -131,11 +118,11 @@ Route::middleware(['auth'])->group(
             ],
             function () {
                 Route::get('list', 'TeamController@list')
-                ->name('list');
+                    ->name('list'); //index
                 Route::get('add/form', 'TeamController@addForm')
-                ->name('add.form');
+                    ->name('add.form'); //create
                 Route::post('add', 'TeamController@add')
-                ->name('add');
+                    ->name('add'); //store
             }
         );
     }

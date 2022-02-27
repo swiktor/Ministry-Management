@@ -1,5 +1,5 @@
 @php
-foreach ($ministry[0]->coworkers as $coworker_old) {
+foreach ($ministry->coworkers as $coworker_old) {
     $coworkerArray[] = $coworker_old->id;
 }
 @endphp
@@ -15,7 +15,8 @@ foreach ($ministry[0]->coworkers as $coworker_old) {
                 <div class="card">
                     <div class="card-header">Edytuj służbę</div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('ministry.edit') }}">
+                        <form method="POST" action="{{ route('ministry.update', ['ministry'=>$ministry]) }}">
+                            @method('PUT')
                             @csrf
                             <div class="form-group row">
                                 <label for="coworkers" class="col-md-4 col-form-label text-md-right">Wybierz współpracowników
@@ -51,7 +52,7 @@ foreach ($ministry[0]->coworkers as $coworker_old) {
                                     godzinę</label>
                                 <div class="col-md-6">
                                     <input type="datetime-local" id="when" name="when"
-                                        value="{{ $ministry[0]->when->format('Y-m-d\TH:i') ?? '' }}"
+                                        value="{{ $ministry->when->format('Y-m-d\TH:i') ?? '' }}"
                                         class="form-control @error('when') is-invalid @enderror" required>
                                     @error('when')
                                         <span class="invalid-feedback" role="alert">
@@ -141,7 +142,7 @@ foreach ($ministry[0]->coworkers as $coworker_old) {
                                     </button>
                                 </div>
                             </div>
-                            <input type="hidden" value="{{ $ministry[0]->id }}" name="ministry_id">
+                            <input type="hidden" value="{{ $ministry->id }}" name="ministry_id">
                         </form>
                     </div>
                 </div>

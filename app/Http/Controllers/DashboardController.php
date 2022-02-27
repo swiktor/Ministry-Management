@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $ministryProposalUserList=$this->dashboardRepository->ministryProposalUserList(Auth::user());
         $incompleteReport=$this->dashboardRepository->incompleteReportFind(Auth::user());
 
-        return view('ministry.list', [
+        return view('ministry.index', [
             'ministries' => $ministries,
             'ministryProposalUserList' => $ministryProposalUserList,
             'incompleteReport' => $incompleteReport,

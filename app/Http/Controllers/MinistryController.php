@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Report;
-use App\Model\Ministry;
-use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use App\Http\Requests\AddMinistry;
 use App\Http\Requests\EditMinistry;
-use Illuminate\Support\Facades\DB;
-use App\Repository\ReportRepository;
-use Illuminate\Support\Facades\Auth;
+use App\Model\Ministry;
+use App\Model\Report;
 use App\Repository\CoworkerRepository;
 use App\Repository\MinistryRepository;
+use App\Repository\ReportRepository;
+use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class MinistryController extends Controller
 {
@@ -26,8 +26,12 @@ class MinistryController extends Controller
         $this->coworkerRepository = $coworkerRepository;
         $this->reportRepository = $reportRepository;
     }
-
-    public function list(Request $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(Request $request)
     {
         if (!empty($request->get('when'))) {
             $when = $request->get('when');
@@ -42,23 +46,34 @@ class MinistryController extends Controller
 
         $ministries = $this->ministryRepository->allPaginated($month, $year, 10);
 
-        return view('ministry.list', [
+        return view('ministry.index', [
             'ministries' => $ministries,
             'when' => $when,
         ]);
     }
 
-    public function addForm()
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function create()
     {
         $coworkers = $this->coworkerRepository->allActive();
 
-        return view('ministry.add', [
+        return view('ministry.create', [
             'coworkers' => $coworkers,
             'title' => 'Umów',
         ]);
     }
 
-    public function add(AddMinistry $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(AddMinistry $request)
     {
         $data = $request->validated();
 
@@ -76,33 +91,48 @@ class MinistryController extends Controller
         $this->ministryRepository->ministryProposalForUser($data['coworker'], $ministry_id, $this->coworkerRepository, $this->reportRepository);
 
         return redirect()
-            ->route('ministry.list')
+            ->route('ministry.index')
             ->with('success', 'Pomyślnie dodano nową służbę');
     }
 
-    public function listForCoworker(int $id)
-    {
-        $ministries = $this->ministryRepository->listForCoworkerPaginated($id, 10);
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Model\Ministry  $ministry
+     * @return \Illuminate\Http\Response
+     */
+    //    public function show(Ministry $ministry)
+    //    {
+    //        //
+    //    }
 
-        return view('ministry.list', [
-            'ministries' => $ministries,
-        ]);
-    }
-
-    public function editForm(int $ministry_id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Model\Ministry  $ministry
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function edit(Ministry $ministry)
     {
-        $ministry = $this->ministryRepository->get($ministry_id);
+        $ministry_db = $this->ministryRepository->get($ministry->id)->first();
         $coworkers = $this->coworkerRepository->allActive();
-        $report = $this->reportRepository->get(Report::where('ministry_id', $ministry_id)->first()->id);
+        $report = $this->reportRepository->get(Report::where('ministry_id', $ministry->id)->first()->id);
 
         return view('ministry.edit', [
             'coworkers' => $coworkers,
-            'ministry' => $ministry,
+            'ministry' => $ministry_db,
             'report' => $report,
         ]);
     }
 
-    public function edit(EditMinistry $request)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Model\Ministry  $ministry
+     * @return \Illuminate\Http\Response
+     */
+    public function update(EditMinistry $request, Ministry $ministry)
     {
         $data = $request->validated();
 
@@ -111,7 +141,7 @@ class MinistryController extends Controller
 
         if ($ministryCompare && $reportCompare) {
             return redirect()
-                ->route('ministry.list')
+                ->route('ministry.index')
                 ->with('info', 'Nie potrzeba edytować służby');
         } else {
             $isMinistryEdited = $this->ministryRepository->edit($data);
@@ -122,27 +152,33 @@ class MinistryController extends Controller
                     // $this->ministryRepository->setInGoogleCalendar($ministry_form['id'], Auth::user());
                 }
                 return redirect()
-                    ->route('ministry.list')
+                    ->route('ministry.index')
                     ->with('success', 'Pomyślnie edytowano służbę');
             } else {
                 return redirect()
-                    ->route('ministry.list')
+                    ->route('ministry.index')
                     ->with('error', 'Nie udało się edytować służby');
             }
         }
     }
 
-    public function delete(int $id)
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Model\Ministry  $ministry
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Ministry $ministry)
     {
-        $deleted = $this->ministryRepository->delete($id);
+        $deleted = $this->ministryRepository->delete($ministry->id);
 
         if ($deleted) {
             return redirect()
-                ->route('ministry.list')
+                ->route('ministry.index')
                 ->with('success', 'Pomyślnie usunięto służbę');
         } else {
             return redirect()
-                ->route('ministry.list')
+                ->route('ministry.index')
                 ->with('error', 'Nie udało się usunąć służby');
         }
     }
@@ -159,7 +195,7 @@ class MinistryController extends Controller
     {
         $this->ministryRepository->ministryProposalAccept($id, $this->reportRepository);
         return redirect()
-            ->route('ministry.list')
+            ->route('ministry.index')
             ->with('success', 'Pomyślnie zaakceptowano propozycję');
     }
 
