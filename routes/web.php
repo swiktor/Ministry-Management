@@ -60,7 +60,7 @@ Route::middleware(['auth'])->group(
         );
 
         Route::resource('coworker', CoworkerController::class);
-    
+
         Route::resource('congregation', CongregationController::class);
 
         Route::group(
@@ -80,20 +80,8 @@ Route::middleware(['auth'])->group(
         }
         );
 
-        Route::group(
-        [
-            'prefix' => 'team',
-            'as' => 'team.'
-        ],
-            function () {
-            Route::get('list', 'TeamController@list')
-                ->name('list'); //index
-            Route::get('add/form', 'TeamController@addForm')
-                ->name('add.form'); //create
-            Route::post('add', 'TeamController@add')
-                ->name('add'); //store
-        }
-        );
+        Route::resource('team', TeamController::class);
+
     }
 );
 

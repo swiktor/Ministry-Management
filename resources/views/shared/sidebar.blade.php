@@ -66,11 +66,11 @@
 
 <div class="sb-sidenav-menu-heading">Grupy (Work in progress)</div>
 <nav class="sb-sidenav-menu-nested">
-    <a class="nav-link" href="{{ route('team.list') }}">
+    <a class="nav-link" href="{{ route('team.index') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Lista
     </a>
-    <a class="nav-link" href="{{ route('team.add.form') }}">
+    <a class="nav-link" href="{{ route('team.create') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
         Dodaj
     </a>
