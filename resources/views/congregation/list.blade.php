@@ -31,7 +31,7 @@
                                     <td class="align-middle">{{ $congregations->firstItem() + $key }}</td>
                                     <td class="align-middle">{{ $congregation->name }}
                                     <td class="align-middle">
-                                        <a href="{{ route('coworker.list', ['congregation' => $congregation->id]) }}">
+                                        <a href="{{ route('coworker.index', ['congregation' => $congregation->id]) }}">
                                             <button class="btn btn-info">Osoby ze zboru</button>
                                         </a>
                                     </td>

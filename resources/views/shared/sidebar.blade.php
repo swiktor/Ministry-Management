@@ -38,7 +38,7 @@
 
 <div class="sb-sidenav-menu-heading">Współpracownicy</div>
 <nav class="sb-sidenav-menu-nested">
-    <a class="nav-link" href="{{ route('coworker.list') }}">
+    <a class="nav-link" href="{{ route('coworker.index') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Lista
     </a>
@@ -46,7 +46,7 @@
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Ci co nigdy
     </a>
-    <a class="nav-link" href="{{ route('coworker.add.form') }}">
+    <a class="nav-link" href="{{ route('coworker.create') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
         Dodaj
     </a>

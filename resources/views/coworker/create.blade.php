@@ -10,7 +10,7 @@
                     <div class="card-header">Dodaj współpracownika</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('coworker.add') }}">
+                        <form method="POST" action="{{ route('coworker.store') }}">
                             @csrf
 
                             <div class="form-group row">

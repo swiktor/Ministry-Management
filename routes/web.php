@@ -3,16 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+/* |-------------------------------------------------------------------------- | Web Routes |-------------------------------------------------------------------------- | | Here is where you can register web routes for your application. These | routes are loaded by the RouteServiceProvider within a group which | contains the "web" middleware group. Now create something great! | */
 
 Route::middleware(['auth'])->group(
     function () {
@@ -29,9 +20,8 @@ Route::middleware(['auth'])->group(
                 ->name('coworker');
             Route::get('report', 'DashboardController@report')
                 ->name('report');
-        });
-
-        Route::resource('ministry', MinistryController::class)->except('show');
+        }
+        );
 
         Route::group([
             'prefix' => 'ministry',
@@ -45,24 +35,15 @@ Route::middleware(['auth'])->group(
 
             Route::get('proposal/reject/{id}', 'MinistryController@proposalReject')
                 ->name('proposal.reject');
-        });
+        }
+        );
 
-
-
+        Route::resource('ministry', MinistryController::class);
 
         Route::group([
             'prefix' => 'coworker',
             'as' => 'coworker.'
         ], function () {
-            Route::get('list', 'CoworkerController@list')
-                ->name('list'); //index
-
-            Route::get('add/form', 'CoworkerController@addForm')
-                ->name('add.form'); //create
-
-            Route::post('add', 'CoworkerController@add')
-                ->name('add'); //store
-
             Route::get('never', 'CoworkerController@never')
                 ->name('never');
 
@@ -75,55 +56,58 @@ Route::middleware(['auth'])->group(
             Route::get('list/{id}', 'MinistryController@listForCoworker')
                 ->where(['id' => '[0-9]+'])
                 ->name('ministry.list');
-        });
+        }
+        );
+
+        Route::resource('coworker', CoworkerController::class);
 
         Route::group(
-            [
-                'prefix' => 'congregation',
-                'as' => 'congregation.'
-            ],
+        [
+            'prefix' => 'congregation',
+            'as' => 'congregation.'
+        ],
             function () {
-                Route::get('list', 'CongregationController@list')
-                    ->name('list'); //index
-
-                Route::get('add/form', 'CongregationController@addForm')
-                    ->name('add.form'); //create
-
-                Route::post('add', 'CongregationController@add')
-                    ->name('add'); //store
-            }
+            Route::get('list', 'CongregationController@list')
+                ->name('list'); //index
+    
+            Route::get('add/form', 'CongregationController@addForm')
+                ->name('add.form'); //create
+    
+            Route::post('add', 'CongregationController@add')
+                ->name('add'); //store
+        }
         );
 
         Route::group(
-            [
-                'prefix' => 'google',
-                'as' => 'google.'
-            ],
+        [
+            'prefix' => 'google',
+            'as' => 'google.'
+        ],
             function () {
-                Route::get('index', 'GoogleAccountController@index')
-                    ->name('index');
-                Route::get('oauth', 'GoogleAccountController@store')
-                    ->name('store');
-                Route::delete('{googleAccount}', 'GoogleAccountController@destroy')
-                    ->name('destroy');
-                Route::post('{googleCalendar}', 'GoogleAccountController@select')
-                    ->name('select');
-            }
+            Route::get('index', 'GoogleAccountController@index')
+                ->name('index');
+            Route::get('oauth', 'GoogleAccountController@store')
+                ->name('store');
+            Route::delete('{googleAccount}', 'GoogleAccountController@destroy')
+                ->name('destroy');
+            Route::post('{googleCalendar}', 'GoogleAccountController@select')
+                ->name('select');
+        }
         );
 
         Route::group(
-            [
-                'prefix' => 'team',
-                'as' => 'team.'
-            ],
+        [
+            'prefix' => 'team',
+            'as' => 'team.'
+        ],
             function () {
-                Route::get('list', 'TeamController@list')
-                    ->name('list'); //index
-                Route::get('add/form', 'TeamController@addForm')
-                    ->name('add.form'); //create
-                Route::post('add', 'TeamController@add')
-                    ->name('add'); //store
-            }
+            Route::get('list', 'TeamController@list')
+                ->name('list'); //index
+            Route::get('add/form', 'TeamController@addForm')
+                ->name('add.form'); //create
+            Route::post('add', 'TeamController@add')
+                ->name('add'); //store
+        }
         );
     }
 );

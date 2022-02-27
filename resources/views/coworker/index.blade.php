@@ -10,7 +10,7 @@
             <div class="card-body">
                 {{-- @dump($congregations) --}}
                 @if (!empty($congregations))
-                    <form class="form-inline" action="{{ route('coworker.list') }}">
+                    <form class="form-inline" action="{{ route('coworker.index') }}">
                         <div class="form-row">
                             <label class="my-1 mr-2" for="when">Wybierz zbór:</label>
                             <div class="col">

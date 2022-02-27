@@ -9,7 +9,7 @@
             <div class="card-header"><i class="fas fa-table mr-1"></i>Lista propozycji</div>
             <div class="card-body">
                 @if (!empty($when))
-                    <form class="form-inline" action="{{ route('ministry.list') }}">
+                    <form class="form-inline" action="{{ route('ministry.index') }}">
                         <div class="form-row">
                             <label class="my-1 mr-2" for="when">Wybierz miesiąc:</label>
                             <div class="col">
