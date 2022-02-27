@@ -10,7 +10,7 @@
                     <div class="card-header">Dodaj zbór</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('congregation.add') }}">
+                        <form method="POST" action="{{ route('congregation.store') }}">
                             @csrf
 
                             <div class="form-group row">

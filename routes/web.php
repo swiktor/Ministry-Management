@@ -60,23 +60,8 @@ Route::middleware(['auth'])->group(
         );
 
         Route::resource('coworker', CoworkerController::class);
-
-        Route::group(
-        [
-            'prefix' => 'congregation',
-            'as' => 'congregation.'
-        ],
-            function () {
-            Route::get('list', 'CongregationController@list')
-                ->name('list'); //index
     
-            Route::get('add/form', 'CongregationController@addForm')
-                ->name('add.form'); //create
-    
-            Route::post('add', 'CongregationController@add')
-                ->name('add'); //store
-        }
-        );
+        Route::resource('congregation', CongregationController::class);
 
         Route::group(
         [

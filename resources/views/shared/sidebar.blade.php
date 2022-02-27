@@ -54,11 +54,11 @@
 
 <div class="sb-sidenav-menu-heading">Zbory</div>
 <nav class="sb-sidenav-menu-nested">
-    <a class="nav-link" href="{{ route('congregation.list') }}">
+    <a class="nav-link" href="{{ route('congregation.index') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
         Lista
     </a>
-    <a class="nav-link" href="{{ route('congregation.add.form') }}">
+    <a class="nav-link" href="{{ route('congregation.create') }}">
         <div class="sb-nav-link-icon"><i class="fas fa-plus"></i></div>
         Dodaj
     </a>
