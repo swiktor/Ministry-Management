@@ -73,7 +73,6 @@ class SendReportMail implements ShouldQueue
 
             $ministry_id = $ministryRepository->add($ministry);
             $coworkerRepository->addToMinistry($ministry['coworker'], $ministry_id);
-            // $ministryRepository->setInGoogleCalendar($ministry_id, $user);
 
             $report_addition['id'] = $reportRepository->add($ministry_id);
             $report_addition['hours'] = "00:" . $hours_minutes[1] . ":00";
