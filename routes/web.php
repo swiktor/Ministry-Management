@@ -80,6 +80,16 @@ Route::middleware(['auth'])->group(
         }
         );
 
+        Route::group([
+            'prefix' => 'team',
+            'as' => 'team.'
+        ], function () {
+            Route::get('{team}/ministry', 'TeamController@ministryWithTeam')
+                ->name('ministry');
+
+            }
+        );
+
         Route::resource('team', TeamController::class);
 
     }

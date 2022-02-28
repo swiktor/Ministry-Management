@@ -54,9 +54,9 @@ class TeamController extends Controller
         $name = $request->input('name');
         $coworkers = $request->input('coworker');
 
-        $team_id = $this->teamRepository->add($name);
-        $this->teamRepository->addUserToTeam($team_id, Auth::id());
-        $this->coworkerRepository->addCoworkersToTeam($coworkers, $team_id);
+        $team_id = $this->teamRepository->store($name);
+        $this->teamRepository->addCurrentUserToTeam($team_id, Auth::id());
+        $this->teamRepository->addCoworkersToTeam($coworkers, $team_id);
 
         return redirect()
             ->route('team.index')
@@ -78,11 +78,18 @@ class TeamController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Model\Team  $team
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit(Team $team)
     {
-    //
+        $team_db = Team::where('id', $team->id)->first();
+        $coworkers = $this->coworkerRepository->allActive();
+
+        return view('team.edit', [
+            'team' => $team_db,
+            'coworkers' => $coworkers,
+        ]);
+
     }
 
     /**
@@ -94,7 +101,13 @@ class TeamController extends Controller
      */
     public function update(Request $request, Team $team)
     {
-    //
+        $new_name = $request->name;
+        $new_coworkers = $request->coworkers;
+        $this->teamRepository->edit($new_name, $new_coworkers, $team);
+
+        return redirect()
+            ->route('team.index')
+            ->with('success', 'Pomyślnie zaktualizowano grupę');
     }
 
     /**
@@ -105,6 +118,22 @@ class TeamController extends Controller
      */
     public function destroy(Team $team)
     {
-    //
+        $this->teamRepository->destroy($team);
+
+        return redirect()
+            ->route('team.index')
+            ->with('success', 'Pomyślnie usunięto grupę');
+    }
+
+    public function ministryWithTeam(Team $team)
+    {
+        $coworkers = $this->coworkerRepository->allActive();
+
+        return view('ministry.create', [
+            'coworkers' => $coworkers,
+            'title' => 'Umów grupową',
+            'team' => $team,
+
+        ]);
     }
 }
