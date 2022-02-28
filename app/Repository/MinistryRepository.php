@@ -42,4 +42,6 @@ interface MinistryRepository
     public function ministryProposalAccept($ministry_id, $reportRepository);
 
     public function ministryProposalReject($ministry_id);
+
+    public function usersInMinistry($coworkers);
 }

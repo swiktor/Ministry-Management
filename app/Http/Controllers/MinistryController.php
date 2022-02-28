@@ -101,10 +101,10 @@ class MinistryController extends Controller
      * @param  \App\Model\Ministry  $ministry
      * @return \Illuminate\Http\Response
      */
-    //    public function show(Ministry $ministry)
-    //    {
-    //        //
-    //    }
+       public function show(Ministry $ministry)
+       {
+           //
+       }
 
     /**
      * Show the form for editing the specified resource.
@@ -181,6 +181,15 @@ class MinistryController extends Controller
                 ->route('ministry.index')
                 ->with('error', 'Nie udało się usunąć służby');
         }
+    }
+
+    public function listForCoworker(int $id)
+    {
+        $ministries = $this->ministryRepository->listForCoworkerPaginated($id, 10);
+
+        return view('ministry.index', [
+            'ministries' => $ministries,
+        ]);
     }
 
     public function proposal()

@@ -4,20 +4,14 @@ declare(strict_types=1);
 
 namespace App\Repository\Eloquent;
 
-use App\Model\Report;
 use App\Model\Ministry;
 use App\Services\Google;
-use App\Mail\MinistryProposal;
 use Illuminate\Support\Carbon;
-use App\Model\User as modelUser;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Google\Service\Calendar\Calendar;
 
-use function PHPUnit\Framework\isNull;
 use App\Model\Calendar as ModelCalendar;
 use App\Repository\MinistryRepository as MinistryRepositoryInterface;
 
@@ -288,8 +282,7 @@ class MinistryRepository implements MinistryRepositoryInterface
             array_push($all_users_coworker_id, strval($user->coworker_id));
         }
 
-        $users_in_ministry = array_intersect($coworkers, $all_users_coworker_id);
-        return $users_in_ministry;
+        return array_intersect($coworkers, $all_users_coworker_id);
     }
 
 
@@ -329,9 +322,10 @@ class MinistryRepository implements MinistryRepositoryInterface
                     }
                 }
 
+                array_push($coworkers_id_new,Auth::user()->coworker_id);
+
                 $coworkerRepository->addToMinistry($coworkers_id_new, $ministry_new_id);
                 $reportRepository->add($ministry_new_id);
-                // Mail::to($user['email'])->send(new MinistryProposal($user, $ministry_new));
             }
         }
     }
