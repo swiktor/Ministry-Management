@@ -50,7 +50,7 @@ class SendReportMail implements ShouldQueue
         foreach ($users as $user) {
             $report_mail = $dashboardRepository->monthSum($date['month'], $date['year'], $user['id']);
             $hours_minutes = explode(":", $report_mail[0]->s_hours);
-            $report_mail[0]->s_hours = $hours_minutes[0] . ":00";
+            $report_mail[0]->s_hours = $hours_minutes[0];
             Mail::to($user['email'])->send(new ReportMail($user, $report_mail, $date));
 
             $ministry['when'] = Carbon::yesterday()->endOfMonth();
@@ -76,7 +76,7 @@ class SendReportMail implements ShouldQueue
 
             $report_addition['id'] = $reportRepository->add($ministry_id);
             $report_addition['hours'] = "00:" . $hours_minutes[1] . ":00";
-
+            
             DB::table('reports')
                 ->where('id', $report_addition['id'])
                 ->update(['hours' => $report_addition['hours']]);
